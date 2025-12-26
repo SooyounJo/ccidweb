@@ -4,7 +4,11 @@ import { neuehaas } from "@/fonts/fonts";
 import { useState, useEffect } from "react";
 
 export default function Cover() {
-  const [mainText, setMainText] = useState(null);
+  // 프론트 전용: 정적인 메인 텍스트 사용
+  const [mainText] = useState([
+    "QrST is a computational creativity & design collective",
+    "We design future‑oriented experiences with data and emerging technologies",
+  ]);
   const [typedWords, setTypedWords] = useState([]);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [isTypingComplete, setIsTypingComplete] = useState(false);
@@ -12,28 +16,10 @@ export default function Cover() {
   const [activeWords, setActiveWords] = useState([]);
 
   const WAVE_ANIMATION_DURATION = 8000; // ms, matches .wave-text animation duration
-
+  // 초기 타이핑용 배열 세팅
   useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-        const data = await res.json();
-        const flatText = data.main?.flat() || [];
-        setMainText(flatText);
-        setTypedWords(flatText.map(() => ""));
-      } catch (error) {
-        console.error("Error fetching about data:", error);
-      }
-    };
-
-    fetchAboutData();
-  }, []);
+    setTypedWords(mainText.map(() => ""));
+  }, [mainText]);
 
   useEffect(() => {
     if (!mainText || currentWordIndex >= mainText.length) {

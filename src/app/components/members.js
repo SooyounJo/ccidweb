@@ -1,49 +1,46 @@
 "use client";
+ 
+// 프론트 전용: 정적인 멤버 데이터 사용
+const membersStatic = {
+  "Directors": [
+    [
+      "Directors",
+      "Name A",
+      "/img/bg.png",
+      "Director",
+      "Design research, computational creativity, and system design.",
+    ],
+  ],
+  "Members": [
+    [
+      "Members",
+      "Name B",
+      "/img/bg.png",
+      "Designer",
+      "Experience design, visual communication, and prototyping.",
+    ],
+    [
+      "Members",
+      "Name C",
+      "/img/bg.png",
+      "Researcher",
+      "Data‑driven interaction, AI‑assisted tools, and visualization.",
+    ],
+  ],
+};
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { pxGrotesk, neuehaas } from "@/fonts/fonts";
 import { useLanguageStore } from "@/app/store/languageStore";
 
 export default function Members() {
-  const [membersInfo, setMembersInfo] = useState({});
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
+  // 정적인 멤버 데이터 사용
+  const [membersInfo] = useState(membersStatic);
+  const isLoading = false;
   const { lang } = useLanguageStore();
 
   const textStyle = "leading-none text-[6vw] md:text-[5vw] lg:text-[2.4vw]";
   const textStyleKr = "leading-[1.3] mt-[-0.3vh] text-[5vw] md:text-[4.5vw] lg:text-[2.2vw]";
-
-  useEffect(() => {
-    const fetchMembersData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-
-        const data = await res.json();
-        // 동적으로 분류
-        const categorizedMembers = data.members.reduce((acc, member) => {
-          const category = member[0]; // 첫 번째 항목을 키로 사용
-          if (!acc[category]) {
-            acc[category] = [];
-          }
-          acc[category].push(member);
-          return acc;
-        }, {});
-
-        setMembersInfo(categorizedMembers);
-      } catch (error) {
-        console.error("Error fetching members data:", error);
-      } finally {
-        setIsLoading(false); // 로딩 완료
-      }
-    };
-
-    fetchMembersData();
-  }, []);
 
   if (isLoading) {
     return (

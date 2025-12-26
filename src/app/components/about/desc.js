@@ -4,6 +4,26 @@ import { useLanguageStore } from "../../store/languageStore";
 import { pxGrotesk } from "@/fonts/fonts";
 import { neuehaas } from "@/fonts/fonts";
 
+// 프론트 전용: 백엔드(/api/sheets) 대신 정적인 데이터만 사용합니다.
+// 필요하면 아래 aboutInfo 배열을 수정해서 내용만 바꿔 사용하세요.
+const aboutInfo = [
+  // [영문 제목, 영문 설명, 한글 제목, 한글 설명, 이미지 URL(optional)]
+  [
+    "Computational Creativity & Design Research Studio",
+    "We explore new possibilities at the intersection of design, data, and emerging technologies.",
+    "컴퓨테이셔널 크리에이티비티 & 디자인 리서치 스튜디오",
+    "디자인, 데이터, 첨단 기술이 만나는 지점에서 새로운 가능성을 탐구합니다.",
+    "",
+  ],
+  [
+    "From speculative concepts to real-world services",
+    "Projects span from experimental prototypes to large-scale deployments with global partners.",
+    "실험적인 프로토타입부터 실제 서비스까지",
+    "국내외 파트너와 함께 실험적인 프로토타입부터 실제 서비스까지 폭넓게 협업합니다.",
+    "",
+  ],
+];
+
 function DescItem({ id, title, description, imageUrl }) {
   const textStyle =
     "leading-none text-[6vw] md:text-[5vw] lg:text-[2.4vw]";
@@ -54,28 +74,7 @@ function DescItem({ id, title, description, imageUrl }) {
 }
 
 export default function Desc() {
-  const [aboutInfo, setAboutInfo] = useState([]);
   const { lang } = useLanguageStore();
-
-  useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-        const data = await res.json();
-        setAboutInfo(data.desc); // desc 시트 데이터
-      } catch (error) {
-        console.error("Error fetching about data:", error);
-      }
-    };
-
-    fetchAboutData();
-  }, []);
 
   return (
     <ul className="border-primaryB w-full h-full mt-[1.3vw] px-0 text-primaryB pt-[8%] pb-[18%] flex flex-col">

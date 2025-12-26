@@ -2,27 +2,8 @@
 import { useEffect, useState } from "react";
 import "./contact.css";
 export default function Contact({ borderRadius, sectionOn }) {
-  const [aboutInfo, setAboutInfo] = useState(null);
-
-  useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-        const data = await res.json();
-        setAboutInfo(data.about); // about 시트 데이터
-      } catch (error) {
-        console.error("Error fetching about data:", error);
-      }
-    };
-
-    fetchAboutData();
-  }, []);
+  // 프론트 전용: 고정 이메일 사용 (원하는 주소로 수정하세요)
+  const contactEmail = "hello@qrst.studio";
 
   useEffect(() => {
     const interBubble = document.querySelector(".interactive");
@@ -99,10 +80,10 @@ export default function Contact({ borderRadius, sectionOn }) {
 
         <div className="z-[1]">
           <a
-          href={`mailto:${aboutInfo?.[0]?.[2] || ""}`}
+          href={`mailto:${contactEmail}`}
           className="leading-snug pb-1 relative group text-primaryB hover:text-[#000] transition-colors duration-1800"
         >
-          {aboutInfo?.[0]?.[2] || "Loading..."}
+          {contactEmail}
           <span
             className="absolute bottom-0 left-0 w-0 h-0.5 bg-primaryB transition-all duration-[880ms] ease-in-out group-hover:w-full group-hover:bg-[#000]"
           ></span>

@@ -1,31 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLanguageStore } from "@/app/store/languageStore";
 import { pxGrotesk, neuehaas, programme} from "@/fonts/fonts";
 
+// 프론트 전용: 정적인 Works 데이터 사용
+// 3행을 하나의 블록으로 사용하는 구조입니다.
+// [0] = 연도, [1] = 영문 설명, [2] = 한글 설명
+const worksStatic = [
+  // block 1
+  ["", "2024", ""],
+  ["", "Computational design & creative technology projects", ""],
+  ["", "컴퓨테이셔널 디자인과 크리에이티브 테크놀로지 기반의 프로젝트를 수행합니다.", ""],
+];
+
 export default function Works({ textColor }) {
-  const [worksInfo, setWorksInfo] = useState([]);
+  const [worksInfo] = useState(worksStatic);
   const { lang } = useLanguageStore();
-  
-  useEffect(() => {
-    const fetchWorksData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-        const data = await res.json();
-        setWorksInfo(data.works);
-      } catch (error) {
-        console.error("Error fetching works data:", error);
-      }
-    };
-    fetchWorksData();
-  }, []);
 
   return (
     <>

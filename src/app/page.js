@@ -19,27 +19,6 @@ export default function Home() {
   const [textColor, setTextColor] = useState("#0f0f13"); // 기본 블랙
   const [borderRadius, setBorderRadius] = useState(9999); // 초기값: rounded-full
   const [sectionOn, setSectionOn] = useState("cover");
-  const [aboutInfo, setAboutInfo] = useState([]);
-
-  useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-        const data = await res.json();
-        setAboutInfo(data.about); // about 시트 데이터
-      } catch (error) {
-        console.error("Error fetching about data:", error);
-      }
-    };
-
-    fetchAboutData();
-  }, []);
 
   useEffect(() => {
     const sections = document.querySelectorAll("section");
@@ -160,8 +139,7 @@ export default function Home() {
         >
           <Contact borderRadius={borderRadius} sectionOn={sectionOn}/>
           <footer className="transition duration-500 text-primaryB absolute bottom-0 left-0 w-full h-auto text-center p-4 md:p-8 font-[400] leading-[1.5] text-[2.6vw] md:text-[1.8vw] lg:text-[0.9vw] xl:text-[0.75vw]">
-            
-            {aboutInfo?.[0]?.[3] || "© 2025. All rights reserved."}
+            © 2025. All rights reserved.
           </footer>
         </section>
       </main>
