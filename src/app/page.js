@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import "./multilingual.css";
 import Header from "./components/header/header";
 import Nav from "./components/nav/nav";
@@ -13,43 +13,32 @@ import Desc from "./components/about/desc";
 import Works from "./components/works/works";
 import Members from "./components/members";
 import Contact from "./components/contact/contact";
+import { sheetsStatic } from "@/app/data/sheetsStatic";
 
 export default function Home() {
-  const [bgColor, setBgColor] = useState("#f0f0ec"); // 기본 화이트
+  const mainRef = useRef(null);
+  const [bgColor, setBgColor] = useState("#f0f0ec"); // 기본 라이트
   const [textColor, setTextColor] = useState("#0f0f13"); // 기본 블랙
   const [borderRadius, setBorderRadius] = useState(9999); // 초기값: rounded-full
   const [sectionOn, setSectionOn] = useState("cover");
-  const [aboutInfo, setAboutInfo] = useState([]);
+  const [aboutInfo, setAboutInfo] = useState(sheetsStatic?.about || []);
 
   useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-        const data = await res.json();
-        setAboutInfo(data.about); // about 시트 데이터
-      } catch (error) {
-        console.error("Error fetching about data:", error);
-      }
-    };
-
-    fetchAboutData();
+    setAboutInfo(sheetsStatic?.about || []);
   }, []);
 
   useEffect(() => {
-    const sections = document.querySelectorAll("section");
+    const mainEl = mainRef.current;
+    if (!mainEl) return;
+
+    const sections = mainEl.querySelectorAll("section");
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setSectionOn(entry.target.id); // 보이는 섹션의 ID를 저장
         }
       },
-      { threshold: 0.1 } // 10% 이상 보일 때 작동
+      { threshold: 0.1, root: mainEl } // main 스크롤 기준
     );
 
     sections.forEach((section) => observer.observe(section));
@@ -57,26 +46,51 @@ export default function Home() {
     return () => sections.forEach((section) => observer.unobserve(section));
   }, []);
 
+  // Smooth background transition when entering/leaving the People section (no hard cut, no flicker).
   useEffect(() => {
-    const worksSection = document.querySelector("#works");
+    const mainEl = mainRef.current;
+    if (!mainEl) return;
+
+    const membersSection = document.querySelector("#members");
+    if (!membersSection) return;
+
+    const startBg = { r: 240, g: 240, b: 236 }; // #f0f0ec
+    const endBg = { r: 193, g: 184, b: 251 }; // #c1b8fb
+    const startText = { r: 15, g: 15, b: 19 }; // #0f0f13
+    const endText = { r: 93, g: 0, b: 156 }; // #5d009c
+
+    const clamp01 = (n) => Math.max(0, Math.min(1, n));
+    const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+    const rgb = ({ r, g, b }) => `rgb(${r}, ${g}, ${b})`;
+
+    const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setBgColor("#c1b8fb"); // Works 섹션 배경색
-          setTextColor("#5d009c"); // Works 섹션 글자색
-        } else {
-          setBgColor("#f0f0ec"); // 기본 배경
-          setTextColor("#f0f0ec"); // 기본 글자
-        }
+        // Use intersection ratio to blend colors smoothly.
+        // We start blending after a small entry to avoid jitter at the boundary.
+        const raw = entry?.intersectionRatio ?? 0;
+        const t = clamp01((raw - 0.05) / 0.35);
+
+        setBgColor(
+          rgb({
+            r: lerp(startBg.r, endBg.r, t),
+            g: lerp(startBg.g, endBg.g, t),
+            b: lerp(startBg.b, endBg.b, t),
+          })
+        );
+        setTextColor(
+          rgb({
+            r: lerp(startText.r, endText.r, t),
+            g: lerp(startText.g, endText.g, t),
+            b: lerp(startText.b, endText.b, t),
+          })
+        );
       },
-      { threshold: 0.1 } // Works 섹션 10% 보이면 작동
+      { threshold: thresholds, root: mainEl } // main 스크롤 기준
     );
 
-    if (worksSection) observer.observe(worksSection);
-
-    return () => {
-      if (worksSection) observer.unobserve(worksSection);
-    };
+    observer.observe(membersSection);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -122,6 +136,7 @@ export default function Home() {
       ></div>
 
       <main
+        ref={mainRef}
         style={{
           background: bgColor, // linear-gradient 포함해서 그냥 배경으로!
           color: textColor,
@@ -150,7 +165,7 @@ export default function Home() {
         </section>
         <section
           id="members"
-          className="w-[100%] min-h-[100dvh] snap-start md:p-28 p-6 lg:px-[12%]"
+          className="relative w-[100%] min-h-[100dvh] snap-start md:p-28 p-6 lg:px-[12%]"
         >
           <Members />
         </section>

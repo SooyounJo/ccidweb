@@ -10,10 +10,14 @@ export default function About() {
         const res = await fetch(
           `${process.env.NODE_ENV === "production" ? "" : ""}/api/sheets`
         );
+        if (!res.ok) {
+          throw new Error(`Failed to fetch /api/sheets (status: ${res.status})`);
+        }
         const data = await res.json();
-        setAboutInfo(data.about); // about 시트 데이터 
+        setAboutInfo(Array.isArray(data?.about) ? data.about : []); // about 시트 데이터 
       } catch (error) {
         console.error('Error fetching about data:', error);
+        setAboutInfo([]);
       }
     };
 

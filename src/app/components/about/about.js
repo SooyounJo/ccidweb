@@ -2,29 +2,15 @@
 import { useEffect, useState } from "react";
 import { useLanguageStore } from "../../store/languageStore";
 import { neuehaas, pxGrotesk } from "@/fonts/fonts";
+import { sheetsStatic } from "@/app/data/sheetsStatic";
 
 export default function About() {
-  const [aboutInfo, setAboutInfo] = useState([]);
+  const [aboutInfo, setAboutInfo] = useState(sheetsStatic?.about || []);
   const { lang } = useLanguageStore();
 
   useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets` 
-        );
-        const data = await res.json();
-        setAboutInfo(data.about); // about 시트 데이터
-        console.log("about\n"+data.about);
-      } catch (error) {
-        console.error("Error fetching about data:", error);
-      }
-    };
-    fetchAboutData();
+    // keep state synced if the static module ever changes in dev HMR
+    setAboutInfo(sheetsStatic?.about || []);
   }, []);
 
   return (
