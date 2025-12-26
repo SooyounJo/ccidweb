@@ -7,6 +7,7 @@ import Nav from "./components/nav/nav";
 import Navmobile from "./components/nav/navmobile";
 
 import Cover from "./components/landing/cover";
+import LiquidBackground from "./components/landing/liquidBackground";
 import About from "./components/about/about";
 import Keywords from "./components/about/keywords";
 import Desc from "./components/about/desc";
@@ -15,8 +16,9 @@ import Members from "./components/members";
 import Contact from "./components/contact/contact";
 
 export default function Home() {
-  const [bgColor, setBgColor] = useState("#f0f0ec"); // 기본 화이트
-  const [textColor, setTextColor] = useState("#0f0f13"); // 기본 블랙
+  // 기본 배경/텍스트 색상 (기존처럼 밝은 회색 배경 유지)
+  const [bgColor, setBgColor] = useState("#f0f0ec");
+  const [textColor, setTextColor] = useState("#0f0f13");
   const [borderRadius, setBorderRadius] = useState(9999); // 초기값: rounded-full
   const [sectionOn, setSectionOn] = useState("cover");
 
@@ -44,8 +46,9 @@ export default function Home() {
           setBgColor("#c1b8fb"); // Works 섹션 배경색
           setTextColor("#5d009c"); // Works 섹션 글자색
         } else {
-          setBgColor("#f0f0ec"); // 기본 배경
-          setTextColor("#f0f0ec"); // 기본 글자
+          // 기본 밝은 회색 배경 / 어두운 텍스트
+          setBgColor("#f0f0ec");
+          setTextColor("#0f0f13");
         }
       },
       { threshold: 0.1 } // Works 섹션 10% 보이면 작동
@@ -91,6 +94,7 @@ export default function Home() {
 
       <Navmobile sectionOn={sectionOn} />
 
+      {/* 기존 보라색 그라데이션 배경 이미지 (커버 섹션에서만 보이도록) */}
       <div
         style={{
           transition: "top 0.5s ease-in-out, opacity 3s ease-in-out",
@@ -100,9 +104,21 @@ export default function Home() {
         className={`left-0 fixed bg-[url('/img/bgt.png')] bg-repeat bg-contain bg-center w-full h-[118dvh]`}
       ></div>
 
+      {/* three.js 리퀴드 그라데이션 (보라 배경 위, 콘텐츠 아래) */}
+      <div
+        style={{
+          transition: "top 0.5s ease-in-out, opacity 3s ease-in-out",
+          opacity: sectionOn === "cover" ? 1 : 0,
+          top: sectionOn === "cover" ? 0 : -100,
+        }}
+        className="left-0 fixed z-0 w-full h-[118dvh] pointer-events-none"
+      >
+        <LiquidBackground />
+      </div>
+
       <main
         style={{
-          background: bgColor, // linear-gradient 포함해서 그냥 배경으로!
+          background: bgColor,
           color: textColor,
           borderColor: textColor,
           transition: "background-color 1s ease-in-out",
