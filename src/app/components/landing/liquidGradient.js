@@ -122,7 +122,8 @@ class GradientBackground {
       uGrainIntensity: { value: 0.12 }, // 그레인 조금 더
       uZoom: { value: 1.0 },
       uDarkNavy: { value: new THREE.Vector3(0.12, 0.0, 0.35) },
-      uGradientSize: { value: 0.9 }, // 더 넓고 부드러운 그라데이션
+      // 그라디언트 덩어리 크기 조절 (작게 보이도록 반경 감소)
+      uGradientSize: { value: 0.65 },
       uGradientCount: { value: 8.0 },
       uColor1Weight: { value: 0.5 },
       uColor2Weight: { value: 1.0 },
@@ -269,8 +270,9 @@ class GradientBackground {
 
           vec2 center = vec2(0.5);
           float dist = length(uv - center);
-          float ripple = sin(dist * 12.0 - uTime * 1.6) * 0.02 * tIntensity;
-          float wave = sin(dist * 9.0 - uTime * 1.4) * 0.015 * tIntensity;
+          // 더 작은 스케일의 잔잔한 물결 (파장 짧게, 진폭은 그대로/살짝 감소)
+          float ripple = sin(dist * 20.0 - uTime * 1.6) * 0.015 * tIntensity;
+          float wave = sin(dist * 15.0 - uTime * 1.4) * 0.01 * tIntensity;
           uv += vec2(ripple + wave);
 
           vec3 color = getGradientColor(uv, uTime);
