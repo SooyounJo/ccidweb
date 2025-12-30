@@ -109,13 +109,14 @@ class GradientBackground {
       uResolution: {
         value: new THREE.Vector2(width, height),
       },
-      // 보라색 계열 팔레트 (조금 더 부드럽고 저채도)
-      uColor1: { value: new THREE.Vector3(0.75, 0.25, 1.0) },
-      uColor2: { value: new THREE.Vector3(0.35, 0.0, 0.7) },
-      uColor3: { value: new THREE.Vector3(0.9, 0.5, 1.0) },
-      uColor4: { value: new THREE.Vector3(0.22, 0.02, 0.55) },
-      uColor5: { value: new THREE.Vector3(0.8, 0.3, 0.95) },
-      uColor6: { value: new THREE.Vector3(0.45, 0.1, 0.8) },
+      // 푸른빛의 보라 팔레트 (기준 색상: #582DF5 근처)
+      // #582DF5 -> rgb(88,45,245) ≒ (0.345, 0.176, 0.961)
+      uColor1: { value: new THREE.Vector3(0.345, 0.176, 0.961) }, // 기준 푸른 보라
+      uColor2: { value: new THREE.Vector3(0.18, 0.10, 0.60) },   // 더 어두운 퍼플
+      uColor3: { value: new THREE.Vector3(0.32, 0.20, 0.95) },   // 살짝 밝은 변형
+      uColor4: { value: new THREE.Vector3(0.14, 0.08, 0.50) },   // 딥 퍼플 쉐도우
+      uColor5: { value: new THREE.Vector3(0.38, 0.22, 0.98) },   // 하이라이트
+      uColor6: { value: new THREE.Vector3(0.24, 0.14, 0.78) },   // 중간 톤
       uSpeed: { value: 0.7 }, // 느리게
       uIntensity: { value: 1.1 }, // 전체 대비 낮춤
       uTouchTexture: { value: null },
