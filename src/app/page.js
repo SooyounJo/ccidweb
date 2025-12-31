@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import "./multilingual.css";
 import Header from "./components/header/header";
 import Nav from "./components/nav/nav";
@@ -13,43 +13,34 @@ import Desc from "./components/about/desc";
 import Works from "./components/works/works";
 import Members from "./components/members";
 import Contact from "./components/contact/contact";
+import { sheetsStatic } from "@/app/data/sheetsStatic";
+import GradualBlurTop from "./components/common/GradualBlurTop";
 
 export default function Home() {
-  const [bgColor, setBgColor] = useState("#f0f0ec"); // 기본 화이트
-  const [textColor, setTextColor] = useState("#0f0f13"); // 기본 블랙
+  const mainRef = useRef(null);
+  const BASE_BG = "#f0f0ec"; // 기본 라이트(전체)
+  const BASE_TEXT = "#0f0f13"; // 기본 블랙(전체)
+  const [membersBlend, setMembersBlend] = useState(0); // 0..1 (People 섹션만)
   const [borderRadius, setBorderRadius] = useState(9999); // 초기값: rounded-full
   const [sectionOn, setSectionOn] = useState("cover");
-  const [aboutInfo, setAboutInfo] = useState([]);
+  const [aboutInfo, setAboutInfo] = useState(sheetsStatic?.about || []);
 
   useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-        const data = await res.json();
-        setAboutInfo(data.about); // about 시트 데이터
-      } catch (error) {
-        console.error("Error fetching about data:", error);
-      }
-    };
-
-    fetchAboutData();
+    setAboutInfo(sheetsStatic?.about || []);
   }, []);
 
   useEffect(() => {
-    const sections = document.querySelectorAll("section");
+    const mainEl = mainRef.current;
+    if (!mainEl) return;
+
+    const sections = mainEl.querySelectorAll("section");
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setSectionOn(entry.target.id); // 보이는 섹션의 ID를 저장
         }
       },
-      { threshold: 0.1 } // 10% 이상 보일 때 작동
+      { threshold: 0.1, root: mainEl } // main 스크롤 기준
     );
 
     sections.forEach((section) => observer.observe(section));
@@ -57,26 +48,31 @@ export default function Home() {
     return () => sections.forEach((section) => observer.unobserve(section));
   }, []);
 
+  // Smooth background transition when entering/leaving the People section (no hard cut, no flicker).
   useEffect(() => {
-    const worksSection = document.querySelector("#works");
+    const mainEl = mainRef.current;
+    if (!mainEl) return;
+
+    const membersSection = mainEl.querySelector("#members");
+    if (!membersSection) return;
+
+    const clamp01 = (n) => Math.max(0, Math.min(1, n));
+
+    const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setBgColor("#c1b8fb"); // Works 섹션 배경색
-          setTextColor("#5d009c"); // Works 섹션 글자색
-        } else {
-          setBgColor("#f0f0ec"); // 기본 배경
-          setTextColor("#f0f0ec"); // 기본 글자
-        }
+        // Use intersection ratio to blend colors smoothly.
+        // We start blending after a small entry to avoid jitter at the boundary.
+        const raw = entry?.intersectionRatio ?? 0;
+        // Spread the transition a bit more so it feels more gradual.
+        const t = clamp01((raw - 0.03) / 0.55);
+        setMembersBlend(t);
       },
-      { threshold: 0.1 } // Works 섹션 10% 보이면 작동
+      { threshold: thresholds, root: mainEl } // main 스크롤 기준
     );
 
-    if (worksSection) observer.observe(worksSection);
-
-    return () => {
-      if (worksSection) observer.unobserve(worksSection);
-    };
+    observer.observe(membersSection);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -107,6 +103,8 @@ export default function Home() {
       className="w-[100%] absolute scrollbar-hide bg-white z-[-2] overflow-x-hidden"
       // onMouseMove={handleMouseMove}
     >
+      {/* ReactBits-style gradual blur under the top navigation */}
+      <GradualBlurTop sectionOn={sectionOn} />
       <Header sectionOn={sectionOn} />
       <Nav sectionOn={sectionOn} />
 
@@ -122,11 +120,11 @@ export default function Home() {
       ></div>
 
       <main
+        ref={mainRef}
         style={{
-          background: bgColor, // linear-gradient 포함해서 그냥 배경으로!
-          color: textColor,
-          borderColor: textColor,
-          transition: "background-color 1s ease-in-out",
+          background: BASE_BG, // 전체 배경은 항상 라이트(화이트)
+          color: BASE_TEXT,
+          borderColor: BASE_TEXT,
         }}
         className={`scrollbar-hide z-10 h-[100dvh] w-[100%] overflow-y-scroll snap-y snap-mandatory`}
       >
@@ -134,25 +132,68 @@ export default function Home() {
           id="cover"
           className="relative w-[100%] h-[100%] snap-start flex items-center justify-center"
         >
-          <Cover textColor={textColor} />
+          <Cover textColor={BASE_TEXT} />
         </section>
         <section
           id="about"
           className="relative w-[100%] min-h-[100dvh] snap-start pt-20 lg:pt-18 4xl:pt-[3%] px-0 lg:px-0 content-center"
         >
-          <Desc/> 
+          <Desc sectionOn={sectionOn} /> 
         </section>
         <section
           id="works"
           className={`transition-all duration-1000 lg:content-center w-full relative min-h-[100dvh] snap-start`}
         >
-          <Works textColor={textColor} />
+          <Works textColor={BASE_TEXT} sectionOn={sectionOn} />
         </section>
         <section
           id="members"
-          className="w-[100%] min-h-[100dvh] snap-start md:p-28 p-6 lg:px-[12%]"
+          style={(() => {
+            // Only this section blends to purple; cap the max blend so the purple stays a bit lighter.
+            const clamp01 = (n) => Math.max(0, Math.min(1, n));
+            const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+            const t = clamp01(membersBlend) * 0.7; // max 70% tint
+
+            const base = { r: 240, g: 240, b: 236 }; // #f0f0ec
+            const purple = { r: 193, g: 184, b: 251 }; // #c1b8fb
+            const bg = `rgb(${lerp(base.r, purple.r, t)}, ${lerp(base.g, purple.g, t)}, ${lerp(
+              base.b,
+              purple.b,
+              t
+            )})`;
+
+            // Text tint eases in quickly so readability stays consistent.
+            const textT = clamp01(membersBlend / 0.35);
+            const text = `rgba(93, 0, 156, ${textT})`;
+
+            return {
+              backgroundColor: bg,
+              color: text,
+            };
+          })()}
+          className="relative w-[100%] min-h-[100dvh] snap-start md:p-28 p-6 lg:px-[12%]"
         >
-          <Members />
+          {/* Soft gradient edges so the transition doesn't look like a hard cut */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-0 left-0 w-full h-[28vh] z-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(240,240,236,1) 0%, rgba(240,240,236,0.65) 35%, rgba(240,240,236,0) 100%)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-0 left-0 w-full h-[28vh] z-0"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(240,240,236,1) 0%, rgba(240,240,236,0.65) 35%, rgba(240,240,236,0) 100%)",
+            }}
+          />
+
+          <div className="relative z-10">
+            <Members />
+          </div>
         </section>
         <section
           id="contact"

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useLanguageStore } from "../../store/languageStore";
 import { programme } from "@/fonts/fonts";
+import { sheetsStatic } from "@/app/data/sheetsStatic";
 
 function KeywordItem({ id, title, description }) {
   const textStyle =
@@ -30,34 +31,20 @@ function KeywordItem({ id, title, description }) {
 }
 
 export default function Keywords() {
-  const [aboutInfo, setAboutInfo] = useState([]);
+  const [aboutInfo, setAboutInfo] = useState(sheetsStatic?.about || []);
   const { lang } = useLanguageStore();
 
   useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-        const data = await res.json();
-        setAboutInfo(data.about); // about 시트 데이터
-      } catch (error) {
-        console.error("Error fetching about data:", error);
-      }
-    };
-
-    fetchAboutData();
+    setAboutInfo(sheetsStatic?.about || []);
   }, []);
+
+  const rows = Array.isArray(aboutInfo) ? aboutInfo : [];
 
   return (
     <ul
       className={`w-full h-full border-t-[1px] text-primaryB border-primaryB pb-[40%] flex flex-col`}
     >
-      {aboutInfo.slice(1).map((item, i) => (
+      {rows.slice(1).map((item, i) => (
         <KeywordItem key={i} id={String(i + 1).padStart(2, "0")} title={lang == 'en' ? item[0] : item[2]} description={lang === 'en' ? item[1] : item[3]} />
       ))}
     </ul>

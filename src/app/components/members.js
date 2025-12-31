@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { pxGrotesk, neuehaas } from "@/fonts/fonts";
 import { useLanguageStore } from "@/app/store/languageStore";
+import { sheetsStatic } from "@/app/data/sheetsStatic";
+import GreyPlaceholder from "@/app/components/common/GreyPlaceholder";
 
 export default function Members() {
   const [membersInfo, setMembersInfo] = useState({});
@@ -15,17 +17,9 @@ export default function Members() {
   useEffect(() => {
     const fetchMembersData = async () => {
       try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-
-        const data = await res.json();
+        const data = sheetsStatic;
         // 동적으로 분류
-        const categorizedMembers = data.members.reduce((acc, member) => {
+        const categorizedMembers = (data?.members || []).reduce((acc, member) => {
           const category = member[0]; // 첫 번째 항목을 키로 사용
           if (!acc[category]) {
             acc[category] = [];
@@ -72,11 +66,7 @@ export default function Members() {
               </h1>
               {firstCategory[1].map((member, index) => (
                 <div key={index} className="md:flex gap-8 lg:gap-6 xl:gap-[3vw]">
-                  <img
-                    src={member[2]}
-                    alt={`${member[1]} profile`}
-                    className="filter grayscale flex-shrink-0 mr-4 w-[11vw] h-[11vw] min-w-[140px] min-h-[140px] rounded-full object-cover object-top"
-                  />
+                  <GreyPlaceholder className="flex-shrink-0 mr-4 w-[11vw] h-[11vw] min-w-[140px] min-h-[140px] rounded-full" />
                   <div className="md:flex-1">
                     <h2 className="leading-[1.1] text-[16px] md:text-[26px] lg:text-[18px] pt-[1.5vh] mt-[4]">{member[1]}</h2>
                     <pre className={`${pxGrotesk.className} pt-[0.5vh] whitespace-pre-wrap leading-[1.1] text-[14px] md:text-[18px] lg:text-[16px]`}>{member[3]}</pre>
@@ -107,11 +97,7 @@ export default function Members() {
                     key={index}
                     className="pb-[1.5vh] lg:pb-[2vh] md:w-1/2 lg:w-1/4 flex items-center"
                   >
-                    <img
-                      src={member[2]}
-                      alt={`${member[1]} profile`}
-                      className="filter grayscale flex-shrink-0 mr-4 w-[6vw] h-[6vw] min-w-[70px] min-h-[70px] rounded-full object-cover object-top"
-                    />
+                    <GreyPlaceholder className="flex-shrink-0 mr-4 w-[6vw] h-[6vw] min-w-[70px] min-h-[70px] rounded-full" />
                     <div className="flex flex-col justify-center pr-3 lg:pt-0 lg:pl-2 min-w-[180px] ">
                       <h3
                         className={`${pxGrotesk.className} pb-1 leading-[1.1] text-[16px] md:text-[18px] lg:text-[15px]`}

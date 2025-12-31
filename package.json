@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "framer-motion": "^12.9.2",
-    "googleapis": "39.2.0",
     "multilingual.js": "^0.1.41",
     "next": "15.1.4",
     "react": "^19.0.0",

@@ -2,6 +2,7 @@
 
 import { neuehaas } from "@/fonts/fonts";
 import { useState, useEffect } from "react";
+import { sheetsStatic } from "@/app/data/sheetsStatic";
 
 export default function Cover() {
   const [mainText, setMainText] = useState(null);
@@ -14,25 +15,12 @@ export default function Cover() {
   const WAVE_ANIMATION_DURATION = 8000; // ms, matches .wave-text animation duration
 
   useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-        const data = await res.json();
-        const flatText = data.main?.flat() || [];
+    // Static data (no API)
+    const flatText = (sheetsStatic?.main || [])
+      .map((row) => row?.[0])
+      .filter(Boolean);
         setMainText(flatText);
         setTypedWords(flatText.map(() => ""));
-      } catch (error) {
-        console.error("Error fetching about data:", error);
-      }
-    };
-
-    fetchAboutData();
   }, []);
 
   useEffect(() => {

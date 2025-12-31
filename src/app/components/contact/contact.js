@@ -1,27 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import "./contact.css";
+import { sheetsStatic } from "@/app/data/sheetsStatic";
 export default function Contact({ borderRadius, sectionOn }) {
-  const [aboutInfo, setAboutInfo] = useState(null);
+  const [aboutInfo, setAboutInfo] = useState(sheetsStatic?.about || null);
 
   useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const res = await fetch(
-          `${
-            process.env.NODE_ENV === "production"
-              ? ""
-              : ""
-          }/api/sheets`
-        );
-        const data = await res.json();
-        setAboutInfo(data.about); // about 시트 데이터
-      } catch (error) {
-        console.error("Error fetching about data:", error);
-      }
-    };
-
-    fetchAboutData();
+    setAboutInfo(sheetsStatic?.about || null);
   }, []);
 
   useEffect(() => {
