@@ -14,34 +14,30 @@ export default function AboutIntro({ activeId, onChange }) {
     : [];
 
   return (
-    <section className="w-full pt-16 pb-20">
-      <div className="w-full px-[2.1vh] lg:px-[5vw]">
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16">
-          {/* 좌측: 고정 제목 */}
-          <div className="lg:w-[40%]">
-            <h2
-              className="text-left font-[500] leading-tight transition-all duration-300 text-[7vw] md:text-[4vw] lg:text-[2.4vw]"
-            >
-              {activeSection.title}
-            </h2>
-          </div>
+    <div className="w-full relative z-10 px-[2.1vh] lg:px-[5vw]">
+      <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
+        {/* 좌측: 제목 */}
+        <div className="lg:w-[40%]">
+          <h2 className="text-left font-[500] leading-tight transition-all duration-300 text-[7vw] md:text-[4vw] lg:text-[3.5vw]">
+            {activeSection.title}
+          </h2>
+        </div>
 
-          {/* 우측: 현재 선택된 섹션의 텍스트 */}
-          <div className="w-full lg:w-[60%]">
-            {safeParagraphs.map((paragraph, index) => (
-              <p
-                key={index}
-                className={`text-[3.2vw] md:text-[2.3vw] lg:text-[1.05vw] leading-[1.9] ${
-                  index > 0 ? "mt-6" : ""
-                }`}
-              >
-                {paragraph}
-              </p>
-            ))}
-          </div>
+        {/* 우측: 현재 선택된 섹션의 텍스트 (가로 너비 확대) */}
+        <div className="w-full lg:w-[52%] lg:ml-auto lg:pr-[5vw]">
+          {safeParagraphs.map((paragraph, index) => (
+            <p
+              key={index}
+              className={`text-[3.2vw] md:text-[2.3vw] lg:text-[1.15vw] leading-[1.9] ${
+                index > 0 ? "mt-6" : ""
+              }`}
+            >
+              {paragraph}
+            </p>
+          ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 

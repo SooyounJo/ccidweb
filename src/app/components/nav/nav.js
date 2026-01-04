@@ -62,7 +62,7 @@ export default function Nav({ sectionOn }) {
       <ul className=" z-[500] font-[300] leading-tight lg:text-[1.2vw] fixed top-0 pt-4 mx-auto w-[100%] transition-all duration-300 transform">
         <LanguageToggle sectionOn={sectionOn} />
 
-        <div className="group z-[500] gap-12 4xl:gap-20 lg:flex justify-center ">
+        <div className="group z-[500] gap-12 4xl:gap-20 lg:flex justify-start lg:pl-[4.2vw] ">
           <span
             className={`select-none z-[-1] transition-all duration-300 ease-out absolute px-2 border-[.12vw] ${
               !isHovered ? 'opacity-0' : 'opacity-100'

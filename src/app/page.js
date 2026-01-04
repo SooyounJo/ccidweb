@@ -66,8 +66,16 @@ export default function Home() {
     if (!mainEl) return;
 
     const handleWheel = (e) => {
-      // about 에 고정된 상태가 아닐 때는 자연 스크롤
-      if (!isAboutLocked) return;
+      // about 에 도달했지만 아직 잠금이 설정되지 않았다면
+      // 첫 휠 이벤트에서 잠금만 걸고 단계 전환은 하지 않는다.
+      if (!isAboutLocked) {
+        const now = Date.now();
+        setIsAboutLocked(true);
+        aboutLockTimeRef.current = now;
+        lastStepTimeRef.current = now;
+        e.preventDefault();
+        return;
+      }
 
       const delta = e.deltaY;
       if (delta === 0) return;
@@ -220,12 +228,32 @@ export default function Home() {
         <section
           id="about"
           data-section="about"
-          className="relative w-[100%] min-h-[100dvh] snap-start pt-20 lg:pt-18 4xl:pt-[3%] px-0 lg:px-0 flex flex-col justify-between"
+          className="relative w-[100%] h-[100dvh] snap-start overflow-hidden"
         >
-          {/* 상단: 제목 + 우측 텍스트 (선택된 섹션 내용) */}
-          <AboutIntro activeId={activeAboutId} onChange={setActiveAboutId} />
-          {/* 하단: 보라색 그라데이션 스트립 (현재 활성화된 섹션만 표시, 항상 화면 하단 정렬) */}
-          <div className="mt-4 lg:mt-0">
+          {/* 좌측 배경 판 (전체 높이) */}
+          <div
+            className="hidden lg:block absolute left-0 top-0 bottom-0 z-0"
+            style={{
+              width: "44.27%",
+              background: "linear-gradient(180deg, #F0F0ED 54.58%, #DBCDED 100%)",
+            }}
+          />
+          {/* 우측 배경 판 (전체 높이) */}
+          <div
+            className="hidden lg:block absolute right-0 top-0 bottom-0 z-0"
+            style={{
+              width: "55.73%",
+              background: "linear-gradient(180deg, #F0F0ED 20.43%, #DFCDE4 100%)",
+            }}
+          />
+
+          {/* 컨텐츠 영역: 모든 단계에서 동일한 상단 기준 위치에 고정 (더 위로 이동) */}
+          <div className="relative z-10 w-full h-full flex flex-col justify-start pt-[15vh]">
+            <AboutIntro activeId={activeAboutId} onChange={setActiveAboutId} />
+          </div>
+
+          {/* 하단 항목: 절대 위치로 배치하여 위 컨텐츠의 레이아웃에 영향을 주지 않음 */}
+          <div className="absolute bottom-0 left-0 w-full z-10">
             <Desc activeId={activeAboutId} />
           </div>
         </section>
