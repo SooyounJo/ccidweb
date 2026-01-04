@@ -26,7 +26,7 @@ export default function Desc({ activeId }) {
   const sections = ABOUT_SECTIONS.filter((section) => section.id !== "who");
 
   return (
-    <ul className="border-primaryB w-full h-full mt-[1.3vw] px-0 text-primaryB pt-[6%] pb-[18%] flex flex-col">
+    <ul className="border-primaryB w-full px-0 text-primaryB pt-[3%] pb-[4%] flex flex-col">
       {sections.map((section) => (
         <DescItem
           key={section.id}

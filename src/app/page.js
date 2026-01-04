@@ -220,12 +220,14 @@ export default function Home() {
         <section
           id="about"
           data-section="about"
-          className="relative w-[100%] min-h-[100dvh] snap-start pt-20 lg:pt-18 4xl:pt-[3%] px-0 lg:px-0 content-center"
+          className="relative w-[100%] min-h-[100dvh] snap-start pt-20 lg:pt-18 4xl:pt-[3%] px-0 lg:px-0 flex flex-col justify-between"
         >
           {/* 상단: 제목 + 우측 텍스트 (선택된 섹션 내용) */}
           <AboutIntro activeId={activeAboutId} onChange={setActiveAboutId} />
-          {/* 하단: 보라색 그라데이션 스트립 (현재 활성화된 섹션만 표시) */}
-          <Desc activeId={activeAboutId} />
+          {/* 하단: 보라색 그라데이션 스트립 (현재 활성화된 섹션만 표시, 항상 화면 하단 정렬) */}
+          <div className="mt-4 lg:mt-0">
+            <Desc activeId={activeAboutId} />
+          </div>
         </section>
         <section
           id="works"
