@@ -19,18 +19,11 @@ export default function AboutIntro({ activeId, onChange }) {
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-16">
           {/* 좌측: 고정 제목 */}
           <div className="lg:w-[40%]">
-            <button
-              type="button"
-              onClick={() => onChange?.("who")}
-              className={`text-left font-[500] leading-tight transition-all duration-300
-                ${
-                  activeId === "who"
-                    ? "text-[7vw] md:text-[4vw] lg:text-[2.4vw]"
-                    : "text-[5.5vw] md:text-[3vw] lg:text-[1.8vw] text-[#777]"
-                }`}
+            <h2
+              className="text-left font-[500] leading-tight transition-all duration-300 text-[7vw] md:text-[4vw] lg:text-[2.4vw]"
             >
               {activeSection.title}
-            </button>
+            </h2>
           </div>
 
           {/* 우측: 현재 선택된 섹션의 텍스트 */}
