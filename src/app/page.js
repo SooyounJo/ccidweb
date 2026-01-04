@@ -190,19 +190,21 @@ export default function Home() {
       {/* 기존 보라색 그라데이션 배경 이미지 (커버 섹션에서만 보이도록) */}
       <div
         style={{
-          transition: "top 0.5s ease-in-out, opacity 3s ease-in-out",
+          transition: "opacity 1.5s ease-in-out",
           opacity: sectionOn === "cover" ? "1" : "0",
-          top: sectionOn === "cover" ? "0" : "-100%",
+          top: 0,
+          visibility: sectionOn === "cover" || sectionOn === "about" ? "visible" : "hidden"
         }}
-        className={`left-0 fixed bg-[url('/img/bgt.png')] bg-repeat bg-contain bg-center w-full h-[118dvh]`}
+        className={`left-0 fixed bg-[url('/img/bgt.png')] bg-repeat bg-contain bg-center w-full h-[118dvh] z-[-1]`}
       ></div>
 
       {/* three.js 리퀴드 그라데이션 (보라 배경 위, 콘텐츠 아래) */}
       <div
         style={{
-          transition: "top 0.5s ease-in-out, opacity 3s ease-in-out",
+          transition: "opacity 1.5s ease-in-out",
           opacity: sectionOn === "cover" ? 1 : 0,
-          top: sectionOn === "cover" ? 0 : -100,
+          top: 0,
+          visibility: sectionOn === "cover" ? "visible" : "hidden"
         }}
         className="left-0 fixed z-0 w-full h-[118dvh] pointer-events-none"
       >
@@ -224,6 +226,17 @@ export default function Home() {
           className="relative w-[100%] h-[100%] snap-start flex items-center justify-center"
         >
           <Cover textColor={textColor} />
+          {/* 어바웃 섹션으로의 자연스러운 배경 전환을 위한 그라데이션 레이어 */}
+          <div className="absolute bottom-0 left-0 w-full h-[40vh] pointer-events-none z-0 flex">
+            <div 
+              className="w-[44.27%] h-full" 
+              style={{ background: "linear-gradient(to top, #F0F0ED, transparent)" }} 
+            />
+            <div 
+              className="w-[55.73%] h-full" 
+              style={{ background: "linear-gradient(to top, #F0F0ED, transparent)" }} 
+            />
+          </div>
         </section>
         <section
           id="about"

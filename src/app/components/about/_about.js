@@ -1,30 +1,59 @@
  "use client";
 
 import { ABOUT_SECTIONS } from "./aboutData";
+import { useState, useEffect } from "react";
 
 // 상단 about 섹션의 좌측 제목 + 우측 텍스트를 보여주는 컴포넌트입니다.
 // 어떤 섹션을 보여줄지는 activeId / onChange 로 제어합니다.
 
 export default function AboutIntro({ activeId, onChange }) {
-  const activeSection =
+  // 우측 컨텐츠의 페이드 전환을 위한 상태 관리
+  const [displayId, setDisplayId] = useState(activeId);
+  const [isFade, setIsFade] = useState(true);
+
+  // 단계(activeId)가 바뀔 때 우측 컨텐츠만 페이드 전환
+  useEffect(() => {
+    setIsFade(false);
+
+    // 사라지는 속도와 나타나는 속도의 간격을 줄여 더 자연스럽게 수정 (250ms)
+    const timer = setTimeout(() => {
+      setDisplayId(activeId);
+      setIsFade(true);
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [activeId]);
+
+  // 좌측 제목은 activeId에 따라 즉시 변경
+  const titleSection =
     ABOUT_SECTIONS.find((section) => section.id === activeId) ||
     ABOUT_SECTIONS[0];
-  const safeParagraphs = Array.isArray(activeSection.paragraphs)
-    ? activeSection.paragraphs
+
+  // 우측 컨텐츠는 페이드 애니메이션을 거치는 displayId에 따라 변경
+  const contentSection =
+    ABOUT_SECTIONS.find((section) => section.id === displayId) ||
+    ABOUT_SECTIONS[0];
+    
+  const safeParagraphs = Array.isArray(contentSection.paragraphs)
+    ? contentSection.paragraphs
     : [];
 
   return (
     <div className="w-full relative z-10 px-[2.1vh] lg:px-[5vw]">
       <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
-        {/* 좌측: 제목 */}
+        {/* 좌측: 제목 (모션 제거, 즉시 변경) */}
         <div className="lg:w-[40%]">
-          <h2 className="text-left font-[500] leading-tight transition-all duration-300 text-[7vw] md:text-[4vw] lg:text-[3.5vw]">
-            {activeSection.title}
+          <h2 className="text-left font-[500] leading-tight text-[7vw] md:text-[4vw] lg:text-[3.5vw]">
+            {titleSection.title}
           </h2>
         </div>
 
-        {/* 우측: 현재 선택된 섹션의 텍스트 (가로 너비 확대) */}
-        <div className="w-full lg:w-[52%] lg:ml-auto lg:pr-[5vw]">
+        {/* 우측: 컨텐츠 (자연스러운 페이드 트랜지션) */}
+        <div 
+          className={`w-full lg:w-[52%] lg:ml-auto lg:pr-[5vw] transition-opacity duration-300 ease-in-out ${
+            isFade ? "opacity-100" : "opacity-0"
+          }`}
+        >
           {safeParagraphs.map((paragraph, index) => (
             <p
               key={index}
