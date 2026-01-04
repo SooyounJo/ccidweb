@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import "./multilingual.css";
 import Header from "./components/header/header";
 import Nav from "./components/nav/nav";
@@ -8,12 +8,13 @@ import Navmobile from "./components/nav/navmobile";
 
 import Cover from "./components/landing/cover";
 import LiquidBackground from "./components/landing/liquidBackground";
-import About from "./components/about/about";
-import Keywords from "./components/about/keywords";
+import AboutIntro from "./components/about/_about";
 import Desc from "./components/about/desc";
 import Works from "./components/works/works";
 import Members from "./components/members";
 import Contact from "./components/contact/contact";
+
+const ABOUT_ORDER = ["who", "sectors", "methodology"];
 
 export default function Home() {
   // 기본 배경/텍스트 색상 (기존처럼 밝은 회색 배경 유지)
@@ -21,22 +22,106 @@ export default function Home() {
   const [textColor, setTextColor] = useState("#0f0f13");
   const [borderRadius, setBorderRadius] = useState(9999); // 초기값: rounded-full
   const [sectionOn, setSectionOn] = useState("cover");
+  const [activeAboutId, setActiveAboutId] = useState("who"); // about 내부 단계
+  const [isAboutLocked, setIsAboutLocked] = useState(false); // about 화면 고정 여부
+  const mainRef = useRef(null);
+  const currentSectionRef = useRef("cover");
+  const lastStepTimeRef = useRef(0);
+  const aboutLockTimeRef = useRef(0);
 
+  // 현재 뷰포트에 보이는 섹션이 어떤 그룹인지 추적 (about/works/members/contact 등)
   useEffect(() => {
     const sections = document.querySelectorAll("section");
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setSectionOn(entry.target.id); // 보이는 섹션의 ID를 저장
+        if (!entry.isIntersecting) return;
+
+        const key = entry.target.dataset.section || entry.target.id;
+        if (key === currentSectionRef.current) return;
+
+        currentSectionRef.current = key;
+        setSectionOn(key);
+
+        // about 섹션으로 새로 진입했을 때: 첫 단계로 리셋 + 잠금 ON
+        if (key === "about") {
+          setActiveAboutId("who");
+          setIsAboutLocked(true);
+          aboutLockTimeRef.current = Date.now();
+          lastStepTimeRef.current = Date.now();
+        } else {
+          // 다른 섹션으로 나가면 잠금 해제
+          setIsAboutLocked(false);
         }
       },
-      { threshold: 0.1 } // 10% 이상 보일 때 작동
+      { threshold: 0.4 } // about 이 화면에 충분히 들어왔을 때만 진입으로 간주
     );
 
     sections.forEach((section) => observer.observe(section));
-
     return () => sections.forEach((section) => observer.unobserve(section));
   }, []);
+
+  // about 섹션 안에서만 스크롤로 about 단계(who → sectors → methodology)를 전환
+  useEffect(() => {
+    const mainEl = mainRef.current;
+    if (!mainEl) return;
+
+    const handleWheel = (e) => {
+      // about 에 고정된 상태가 아닐 때는 자연 스크롤
+      if (!isAboutLocked) return;
+
+      const delta = e.deltaY;
+      if (delta === 0) return;
+
+      const now = Date.now();
+
+      // about 에 막 진입한 직후의 휠 제스처는 단계 전환에 사용하지 않음
+      if (now - aboutLockTimeRef.current < 400) {
+        e.preventDefault();
+        return;
+      }
+      // 너무 빠른 연속 입력은 한 단계만 처리하도록 스로틀링
+      if (now - lastStepTimeRef.current < 400) {
+        e.preventDefault();
+        return;
+      }
+
+      const currentIndex = ABOUT_ORDER.indexOf(activeAboutId);
+      const lastIndex = ABOUT_ORDER.length - 1;
+
+      // 아래로 스크롤
+      if (delta > 0) {
+        if (currentIndex < lastIndex) {
+          // 1→2, 2→3: 스크롤을 막고 내용만 다음 단계로 변경
+          e.preventDefault();
+          lastStepTimeRef.current = now;
+          setActiveAboutId(ABOUT_ORDER[currentIndex + 1]);
+        } else {
+          // 3단계(Our Methodology)에서 한 번 더 내리면:
+          // 잠금을 해제하여 다음 섹션(works)로 자연스럽게 이동
+          lastStepTimeRef.current = now;
+          setIsAboutLocked(false);
+        }
+        return;
+      }
+
+      // 위로 스크롤
+      if (delta < 0) {
+        if (currentIndex > 0) {
+          // 3→2, 2→1: 스크롤을 막고 이전 단계로 변경
+          e.preventDefault();
+          lastStepTimeRef.current = now;
+          setActiveAboutId(ABOUT_ORDER[currentIndex - 1]);
+        } else {
+          // 1단계(who)에서 위로 올리면 잠금을 해제하여 cover 로 자연스럽게 이동
+          lastStepTimeRef.current = now;
+          setIsAboutLocked(false);
+        }
+      }
+    };
+
+    mainEl.addEventListener("wheel", handleWheel, { passive: false });
+    return () => mainEl.removeEventListener("wheel", handleWheel);
+  }, [isAboutLocked, activeAboutId]);
 
   useEffect(() => {
     const worksSection = document.querySelector("#works");
@@ -117,6 +202,7 @@ export default function Home() {
       </div>
 
       <main
+        ref={mainRef}
         style={{
           background: bgColor,
           color: textColor,
@@ -133,9 +219,13 @@ export default function Home() {
         </section>
         <section
           id="about"
+          data-section="about"
           className="relative w-[100%] min-h-[100dvh] snap-start pt-20 lg:pt-18 4xl:pt-[3%] px-0 lg:px-0 content-center"
         >
-          <Desc/> 
+          {/* 상단: 제목 + 우측 텍스트 (선택된 섹션 내용) */}
+          <AboutIntro activeId={activeAboutId} onChange={setActiveAboutId} />
+          {/* 하단: 보라색 그라데이션 스트립 (현재 활성화된 섹션만 표시) */}
+          <Desc activeId={activeAboutId} />
         </section>
         <section
           id="works"

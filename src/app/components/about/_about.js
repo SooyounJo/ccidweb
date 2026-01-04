@@ -1,49 +1,54 @@
-"use client"
-import { useEffect, useState } from 'react';
+ "use client";
 
-export default function About() {
-  const [aboutInfo, setAboutInfo] = useState([]);
+import { ABOUT_SECTIONS } from "./aboutData";
 
-  useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NODE_ENV === "production" ? "" : ""}/api/sheets`
-        );
-        const data = await res.json();
-        setAboutInfo(data.about); // about 시트 데이터 
-      } catch (error) {
-        console.error('Error fetching about data:', error);
-      }
-    };
+// 상단 about 섹션의 좌측 제목 + 우측 텍스트를 보여주는 컴포넌트입니다.
+// 어떤 섹션을 보여줄지는 activeId / onChange 로 제어합니다.
 
-    fetchAboutData();
-  }, []);
+export default function AboutIntro({ activeId, onChange }) {
+  const activeSection =
+    ABOUT_SECTIONS.find((section) => section.id === activeId) ||
+    ABOUT_SECTIONS[0];
+  const safeParagraphs = Array.isArray(activeSection.paragraphs)
+    ? activeSection.paragraphs
+    : [];
 
   return (
-    <div className="flex items-center justify-center w-full h-full pt-10">
-      <div>
-        <p className="font-[600] leading-tight text-[5vw] sm:text-[4vw] lg:text-[2vw] mb-[3vh] border-b-[1px] pb-1 md:pb-3 mb-4 xl:mb-6 2xl:mb-10 4xl:mb-20">Who We Are</p>
-        <ul>
-          {aboutInfo.length > 0 ? (
-            aboutInfo.map((item, index) => (
-              <li key={index} className="lg:flex gap-4 md:py-4 lg:py-4 mb-8 lg:mb-0 xl:mb-12">
-                <div className="flex flex-col lg:flex-row gap-2 md:gap-6">
-                  {/* 영문 텍스트 */}
-                  <h1 className="flex-1 font-[500] leading-tight text-[5vw] sm:text-[4vw] lg:text-[2vw]">{item[0]}</h1>
-                  {/* 한글 텍스트 */}
-                  <p className="font-founders flex-[0.9] font-[500] leading-[1.85] text-[3vw] sm:text-[1.9vw] lg:text-[1vw] lg:ml-12 4xl:ml-28">
-                    {item[1]}
-                  </p>
-                </div>
-              </li>
-            ))
-          ) : (
-            <p>Loading...</p>
-          )}
-        </ul>
+    <section className="w-full pt-16 pb-20">
+      <div className="w-full px-[2.1vh] lg:px-[5vw]">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16">
+          {/* 좌측: 고정 제목 */}
+          <div className="lg:w-[40%]">
+            <button
+              type="button"
+              onClick={() => onChange?.("who")}
+              className={`text-left font-[500] leading-tight transition-all duration-300
+                ${
+                  activeId === "who"
+                    ? "text-[7vw] md:text-[4vw] lg:text-[2.4vw]"
+                    : "text-[5.5vw] md:text-[3vw] lg:text-[1.8vw] text-[#777]"
+                }`}
+            >
+              {activeSection.title}
+            </button>
+          </div>
+
+          {/* 우측: 현재 선택된 섹션의 텍스트 */}
+          <div className="w-full lg:w-[60%]">
+            {safeParagraphs.map((paragraph, index) => (
+              <p
+                key={index}
+                className={`text-[3.2vw] md:text-[2.3vw] lg:text-[1.05vw] leading-[1.9] ${
+                  index > 0 ? "mt-6" : ""
+                }`}
+              >
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 

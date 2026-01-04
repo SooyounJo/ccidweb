@@ -3,28 +3,6 @@ import { useEffect, useState } from "react";
 import { useLanguageStore } from "../../store/languageStore";
 import { programme } from "@/fonts/fonts";
 
-// 프론트 전용: 정적인 키워드 데이터 사용
-const keywords = [
-  [
-    "Service Design",
-    "We design end‑to‑end service journeys, orchestrating touchpoints and backstage processes.",
-    "서비스 디자인",
-    "서비스 전체 여정 속 문제를 해결하고 보다 나은 경험을 만들기 위해 전략을 수립합니다.",
-  ],
-  [
-    "Design Strategy",
-    "We connect design thinking with business strategy for brands, products, and services.",
-    "디자인 전략",
-    "브랜드, 제품, 서비스 전반에서 디자인 사고와 비즈니스 전략을 결합해 실행 가능한 로드맵을 만듭니다.",
-  ],
-  [
-    "UX / UI & Interaction",
-    "From research to prototyping, we craft interfaces and interactions for meaningful experiences.",
-    "UX / UI & 인터랙션",
-    "리서치부터 프로토타입까지, 사용자의 맥락에 맞는 인터페이스와 인터랙션을 설계합니다.",
-  ],
-];
-
 function KeywordItem({ id, title, description }) {
   const textStyle =
     "leading-none text-[6vw] md:text-[5vw] lg:text-[2.4vw] group-hover:text-primaryC text-primaryB";
@@ -52,9 +30,28 @@ function KeywordItem({ id, title, description }) {
 }
 
 export default function Keywords() {
-  // 기존 Google Sheets about 데이터 대신 정적인 keywords 배열 사용
-  const [aboutInfo] = useState(keywords);
+  const [aboutInfo, setAboutInfo] = useState([]);
   const { lang } = useLanguageStore();
+
+  useEffect(() => {
+    const fetchAboutData = async () => {
+      try {
+        const res = await fetch(
+          `${
+            process.env.NODE_ENV === "production"
+              ? ""
+              : ""
+          }/api/sheets`
+        );
+        const data = await res.json();
+        setAboutInfo(data.about); // about 시트 데이터
+      } catch (error) {
+        console.error("Error fetching about data:", error);
+      }
+    };
+
+    fetchAboutData();
+  }, []);
 
   return (
     <ul

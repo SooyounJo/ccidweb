@@ -30,7 +30,7 @@ export default function Nav({ sectionOn }) {
   // Set initial position and width based on sectionOn
   useEffect(() => {
     const sections = ["about", "works", "members", "contact"];
-    const index = sections.indexOf(sectionOn); // Find the index of the section
+    const index = sections.indexOf(sectionOn); // Find the index of the section group
     if (index !== -1 && isHovered) {
       const { position, width } = calculatePositionAndWidth(index);
       setBoxPosition(position);
