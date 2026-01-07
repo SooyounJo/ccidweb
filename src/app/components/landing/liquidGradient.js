@@ -7,8 +7,8 @@ class TouchTexture {
   constructor() {
     this.size = 64;
     this.width = this.height = this.size;
-    this.maxAge = 64;
-    this.radius = 0.25 * this.size;
+    this.maxAge = 120; // 더 오래 지속되어 묵직한 느낌
+    this.radius = 0.3 * this.size; // 영향 반경 살짝 확대
     this.speed = 1 / this.maxAge;
     this.trail = [];
     this.last = null;
@@ -61,7 +61,7 @@ class TouchTexture {
       const d = Math.sqrt(dd);
       vx = dx / d;
       vy = dy / d;
-      force = Math.min(dd * 20000, 2.0);
+      force = Math.min(dd * 10000, 1.0);
     }
     this.last = { x: point.x, y: point.y };
     this.trail.push({ x: point.x, y: point.y, age: 0, force, vx, vy });
@@ -117,7 +117,7 @@ class GradientBackground {
       uColor4: { value: new THREE.Vector3(0.14, 0.08, 0.50) },   // 딥 퍼플 쉐도우
       uColor5: { value: new THREE.Vector3(0.38, 0.22, 0.98) },   // 하이라이트
       uColor6: { value: new THREE.Vector3(0.24, 0.14, 0.78) },   // 중간 톤
-      uSpeed: { value: 0.7 }, // 느리게
+      uSpeed: { value: 0.25 }, // 더욱 느리고 묵직하게
       uIntensity: { value: 1.1 }, // 전체 대비 낮춤
       uTouchTexture: { value: null },
       uGrainIntensity: { value: 0.12 }, // 그레인 조금 더
@@ -265,15 +265,15 @@ class GradientBackground {
           float vx = -(touchTex.r * 2.0 - 1.0);
           float vy = -(touchTex.g * 2.0 - 1.0);
           float tIntensity = touchTex.b;
-          // 터치 왜곡 강도 크게 줄여서 부드럽게
-          uv.x += vx * 0.25 * tIntensity;
-          uv.y += vy * 0.25 * tIntensity;
+          // 터치 왜곡 강도는 유지하되 더 느리게 움직이도록 uTime 영향 조절
+          uv.x += vx * 0.15 * tIntensity;
+          uv.y += vy * 0.15 * tIntensity;
 
           vec2 center = vec2(0.5);
           float dist = length(uv - center);
-          // 더 작은 스케일의 잔잔한 물결 (파장 짧게, 진폭은 그대로/살짝 감소)
-          float ripple = sin(dist * 20.0 - uTime * 1.6) * 0.015 * tIntensity;
-          float wave = sin(dist * 15.0 - uTime * 1.4) * 0.01 * tIntensity;
+          // 잔물결을 거의 없애고 묵직한 거대 물결만 남김
+          float ripple = sin(dist * 12.0 - uTime * 0.6) * 0.008 * tIntensity;
+          float wave = sin(dist * 8.0 - uTime * 0.4) * 0.005 * tIntensity;
           uv += vec2(ripple + wave);
 
           vec3 color = getGradientColor(uv, uTime);

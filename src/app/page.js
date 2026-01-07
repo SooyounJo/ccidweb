@@ -227,14 +227,14 @@ export default function Home() {
         >
           <Cover textColor={textColor} />
           {/* 어바웃 섹션으로의 자연스러운 배경 전환을 위한 그라데이션 레이어 */}
-          <div className="absolute bottom-0 left-0 w-full h-[40vh] pointer-events-none z-0 flex">
+          <div className="absolute bottom-0 left-0 w-full h-[20vh] pointer-events-none z-0 flex">
             <div 
               className="w-[44.27%] h-full" 
-              style={{ background: "linear-gradient(to top, #F0F0ED, transparent)" }} 
+              style={{ background: "linear-gradient(to top, #F0F0ED 0%, rgba(240, 240, 237, 0.6) 25%, rgba(240, 240, 237, 0.2) 60%, transparent 100%)" }} 
             />
             <div 
               className="w-[55.73%] h-full" 
-              style={{ background: "linear-gradient(to top, #F0F0ED, transparent)" }} 
+              style={{ background: "linear-gradient(to top, #F0F0ED 0%, rgba(240, 240, 237, 0.6) 25%, rgba(240, 240, 237, 0.2) 60%, transparent 100%)" }} 
             />
           </div>
         </section>
