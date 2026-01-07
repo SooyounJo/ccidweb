@@ -42,7 +42,7 @@ export default function AboutIntro({ activeId, onChange }) {
     <div className="w-full relative z-10 px-0">
       <div className="flex flex-col lg:flex-row items-start">
         {/* 좌측: 제목 (모션 제거, 즉시 변경) */}
-        <div className="w-full lg:w-[33.33%] px-[2.1vh] lg:px-[5vw]">
+        <div className="w-full lg:w-[28%] px-[2.1vh] lg:pl-[4.5vw] lg:pr-[1vw]">
           <h2 className="text-left font-[500] leading-tight text-[6vw] md:text-[5vw] lg:text-[2.2vw] tracking-[-0.03em]">
             {titleSection.title}
           </h2>
@@ -50,14 +50,14 @@ export default function AboutIntro({ activeId, onChange }) {
 
         {/* 우측: 컨텐츠 (자연스러운 페이드 트랜지션) */}
         <div 
-          className={`w-full lg:w-[58%] px-[2.1vh] lg:pl-[2vw] lg:pr-[5vw] transition-opacity duration-300 ease-in-out ${
+          className={`w-full lg:w-[72%] px-[2.1vh] lg:pl-[6vw] lg:pr-[12vw] transition-opacity duration-300 ease-in-out ${
             isFade ? "opacity-100" : "opacity-0"
           }`}
         >
           {safeParagraphs.map((paragraph, index) => (
             <p
               key={index}
-              className={`text-[3.2vw] md:text-[2.3vw] lg:text-[1.1vw] leading-[1.7] ${
+              className={`text-[3.2vw] md:text-[2.3vw] lg:text-[1.2vw] leading-[1.7] ${
                 index > 0 ? "mt-4" : ""
               }`}
             >
@@ -69,14 +69,14 @@ export default function AboutIntro({ activeId, onChange }) {
           <div className={`flex flex-col md:flex-row gap-4 overflow-hidden lg:pb-[5vh] w-full ${displayId === "who" ? "mt-8" : "mt-24"}`}>
             {displayId === "who" ? (
               <>
-                <div className="flex-1 aspect-[16/10] lg:aspect-[3.5/2.5] relative rounded-md overflow-hidden shadow-sm">
+                <div className="w-[45%] md:w-[40%] aspect-[16/10] lg:aspect-[3.5/2.5] relative rounded-md overflow-hidden shadow-sm">
                   <img 
                     src="/img/about_1.png" 
                     alt="About 1" 
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <div className="flex-1 aspect-[16/10] lg:aspect-[3.5/2.5] relative rounded-md overflow-hidden shadow-sm">
+                <div className="w-[45%] md:w-[40%] aspect-[16/10] lg:aspect-[3.5/2.5] relative rounded-md overflow-hidden shadow-sm">
                   <img 
                     src="/img/about_2.png" 
                     alt="About 2" 
@@ -85,7 +85,7 @@ export default function AboutIntro({ activeId, onChange }) {
                 </div>
               </>
             ) : displayId === "sectors" ? (
-              <div className="w-full aspect-[16/8] lg:aspect-[2.5/1] relative rounded-md overflow-hidden shadow-sm">
+              <div className="w-full md:w-[75%] aspect-[16/8] lg:aspect-[2.5/1] relative rounded-md overflow-hidden shadow-sm">
                 <img 
                   src="/img/about_3.png" 
                   alt="About 3" 
@@ -93,7 +93,7 @@ export default function AboutIntro({ activeId, onChange }) {
                 />
               </div>
             ) : (
-              <div className="w-full aspect-[16/8] lg:aspect-[2.5/1] relative rounded-md overflow-hidden shadow-sm">
+              <div className="w-full md:w-[75%] aspect-[16/8] lg:aspect-[2.5/1] relative rounded-md overflow-hidden shadow-sm">
                 <img 
                   src="/img/about_4.png" 
                   alt="About 4" 
