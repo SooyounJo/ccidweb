@@ -12,16 +12,16 @@ function DescItem({ title, isVisible }) {
       className={`lg:flex items-center overflow-hidden transition-all duration-700 ease-out
       ${
         isVisible
-          ? "opacity-100 h-[76px] mb-[1px]"
+          ? "opacity-100 h-[100px] mb-[2px]"
           : "opacity-0 h-0"
       }`}
       style={{
-        width: "44.27%",
+        width: "33.33%",
         background:
           "linear-gradient(180deg, #F0F0ED 21.39%, #DFCDE4 100%)",
       }}
     >
-      <div className="leading-none text-[6vw] md:text-[5vw] lg:text-[2.4vw] tracking-[-0.03em] px-[2.1vh] lg:px-[5vw] text-left">
+      <div className="leading-none text-[6vw] md:text-[5vw] lg:text-[2.2vw] font-[500] tracking-[-0.03em] px-[2.1vh] lg:px-[5vw] text-left">
         {title}
       </div>
     </li>
@@ -38,7 +38,7 @@ export default function Desc({ activeId }) {
   const sections = ABOUT_SECTIONS.filter((section) => section.id !== "who");
 
   return (
-    <ul className="w-full px-0 text-primaryB pb-[4vh] flex flex-col">
+    <ul className="w-full px-0 text-primaryB pb-0 flex flex-col">
       {sections.map((section) => {
         const sectionIndex = ABOUT_SECTIONS.findIndex(
           (s) => s.id === section.id
