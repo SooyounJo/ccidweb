@@ -2,6 +2,40 @@
 
 import * as THREE from "three";
 
+// 색상 팔레트 정의
+const COLOR_PALETTES = {
+  1: {
+    // 보라색 계열 (기본)
+    uColor1: [0.345, 0.176, 0.961],
+    uColor2: [0.18, 0.10, 0.60],
+    uColor3: [0.32, 0.20, 0.95],
+    uColor4: [0.14, 0.08, 0.50],
+    uColor5: [0.38, 0.22, 0.98],
+    uColor6: [0.24, 0.14, 0.78],
+    uDarkNavy: [0.12, 0.0, 0.35],
+  },
+  2: {
+    // 청록색/시안 계열에 보라색 톤 추가
+    uColor1: [0.2, 0.6, 0.9], // 청록색 유지
+    uColor2: [0.35, 0.25, 0.75], // 보라색 톤 추가
+    uColor3: [0.25, 0.65, 0.95], // 청록색 유지
+    uColor4: [0.4, 0.2, 0.7], // 보라색 톤 추가
+    uColor5: [0.3, 0.7, 1.0], // 청록색 유지
+    uColor6: [0.45, 0.35, 0.85], // 청록-보라 혼합
+    uDarkNavy: [0.08, 0.02, 0.22], // 더 쨍하고 어두운 보라색 배경
+  },
+  3: {
+    // 어둡고 선명한 보라색 계열
+    uColor1: [0.45, 0.15, 0.85],
+    uColor2: [0.25, 0.08, 0.55],
+    uColor3: [0.5, 0.18, 0.9],
+    uColor4: [0.2, 0.05, 0.45],
+    uColor5: [0.55, 0.2, 0.95],
+    uColor6: [0.35, 0.12, 0.7],
+    uDarkNavy: [0.08, 0.01, 0.18],
+  },
+};
+
 // TouchTexture: 마우스/터치 움직임을 텍스처로 만들어 셰이더에 전달
 class TouchTexture {
   constructor() {
@@ -89,7 +123,7 @@ class TouchTexture {
     const offset = this.size * 5;
     this.ctx.shadowOffsetX = offset;
     this.ctx.shadowOffsetY = offset;
-    this.ctx.shadowBlur = radius * 1;
+    this.ctx.shadowBlur = radius * 0.5; // 블러 강도 줄여서 더 또렷하게
     this.ctx.shadowColor = `rgba(${color},${0.2 * intensity})`;
 
     this.ctx.beginPath();
@@ -101,34 +135,47 @@ class TouchTexture {
 
 // 그라데이션 플레인을 그리는 셰이더 메터리얼 래퍼
 class GradientBackground {
-  constructor(app, width, height) {
+  constructor(app, width, height, colorPalette = 1) {
     this.app = app;
     this.mesh = null;
+    const palette = COLOR_PALETTES[colorPalette] || COLOR_PALETTES[1];
+    
     this.uniforms = {
       uTime: { value: 0 },
       uResolution: {
         value: new THREE.Vector2(width, height),
       },
-      // 푸른빛의 보라 팔레트 (기준 색상: #582DF5 근처)
-      // #582DF5 -> rgb(88,45,245) ≒ (0.345, 0.176, 0.961)
-      uColor1: { value: new THREE.Vector3(0.345, 0.176, 0.961) }, // 기준 푸른 보라
-      uColor2: { value: new THREE.Vector3(0.18, 0.10, 0.60) },   // 더 어두운 퍼플
-      uColor3: { value: new THREE.Vector3(0.32, 0.20, 0.95) },   // 살짝 밝은 변형
-      uColor4: { value: new THREE.Vector3(0.14, 0.08, 0.50) },   // 딥 퍼플 쉐도우
-      uColor5: { value: new THREE.Vector3(0.38, 0.22, 0.98) },   // 하이라이트
-      uColor6: { value: new THREE.Vector3(0.24, 0.14, 0.78) },   // 중간 톤
+      uColor1: { value: new THREE.Vector3(...palette.uColor1) },
+      uColor2: { value: new THREE.Vector3(...palette.uColor2) },
+      uColor3: { value: new THREE.Vector3(...palette.uColor3) },
+      uColor4: { value: new THREE.Vector3(...palette.uColor4) },
+      uColor5: { value: new THREE.Vector3(...palette.uColor5) },
+      uColor6: { value: new THREE.Vector3(...palette.uColor6) },
       uSpeed: { value: 0.25 }, // 더욱 느리고 묵직하게
       uIntensity: { value: 1.1 }, // 전체 대비 낮춤
       uTouchTexture: { value: null },
-      uGrainIntensity: { value: 0.12 }, // 그레인 조금 더
+      uGrainIntensity: { value: 0.06 }, // 노이즈 강도 줄여서 더 또렷하게
       uZoom: { value: 1.0 },
-      uDarkNavy: { value: new THREE.Vector3(0.12, 0.0, 0.35) },
-      // 그라디언트 덩어리 크기 조절 (작게 보이도록 반경 감소)
-      uGradientSize: { value: 0.65 },
+      uDarkNavy: { value: new THREE.Vector3(...palette.uDarkNavy) },
+      // 그라디언트 덩어리 크기 조절 (더 작게 해서 선명한 경계)
+      uGradientSize: { value: 0.55 },
       uGradientCount: { value: 8.0 },
       uColor1Weight: { value: 0.5 },
       uColor2Weight: { value: 1.0 },
     };
+  }
+
+  updatePalette(colorPalette) {
+    const palette = COLOR_PALETTES[colorPalette] || COLOR_PALETTES[1];
+    if (this.uniforms) {
+      this.uniforms.uColor1.value.set(...palette.uColor1);
+      this.uniforms.uColor2.value.set(...palette.uColor2);
+      this.uniforms.uColor3.value.set(...palette.uColor3);
+      this.uniforms.uColor4.value.set(...palette.uColor4);
+      this.uniforms.uColor5.value.set(...palette.uColor5);
+      this.uniforms.uColor6.value.set(...palette.uColor6);
+      this.uniforms.uDarkNavy.value.set(...palette.uDarkNavy);
+    }
   }
 
   init() {
@@ -265,15 +312,15 @@ class GradientBackground {
           float vx = -(touchTex.r * 2.0 - 1.0);
           float vy = -(touchTex.g * 2.0 - 1.0);
           float tIntensity = touchTex.b;
-          // 터치 왜곡 강도는 유지하되 더 느리게 움직이도록 uTime 영향 조절
-          uv.x += vx * 0.15 * tIntensity;
-          uv.y += vy * 0.15 * tIntensity;
+          // 터치 왜곡 강도 줄여서 더 또렷하게
+          uv.x += vx * 0.1 * tIntensity;
+          uv.y += vy * 0.1 * tIntensity;
 
           vec2 center = vec2(0.5);
           float dist = length(uv - center);
-          // 잔물결을 거의 없애고 묵직한 거대 물결만 남김
-          float ripple = sin(dist * 12.0 - uTime * 0.6) * 0.008 * tIntensity;
-          float wave = sin(dist * 8.0 - uTime * 0.4) * 0.005 * tIntensity;
+          // 잔물결 효과 줄여서 더 또렷하게
+          float ripple = sin(dist * 12.0 - uTime * 0.6) * 0.004 * tIntensity;
+          float wave = sin(dist * 8.0 - uTime * 0.4) * 0.003 * tIntensity;
           uv += vec2(ripple + wave);
 
           vec3 color = getGradientColor(uv, uTime);
@@ -282,8 +329,8 @@ class GradientBackground {
           color += g * uGrainIntensity;
 
           float timeShift = uTime * 0.25;
-          color.r += sin(timeShift) * 0.012;
-          color.b += cos(timeShift * 1.1) * 0.012;
+          color.r += sin(timeShift) * 0.006; // 색상 변화 줄여서 더 또렷하게
+          color.b += cos(timeShift * 1.1) * 0.006;
 
           float brightness2 = length(color);
           float mixFactor2 = max(brightness2 * 1.05, 0.28);
@@ -297,8 +344,8 @@ class GradientBackground {
             color = color * (maxBrightness / b);
           }
 
-          // 살짝 투명하게 출력해서 아래 CSS 보라 그라데이션이 비치도록
-          gl_FragColor = vec4(color, 0.75);
+          // 살짝 투명하게 출력해서 아래 CSS 보라 그라데이션이 비치도록 (투명도 높여서 더 또렷하게)
+          gl_FragColor = vec4(color, 0.85);
         }
       `,
     });
@@ -336,8 +383,9 @@ class GradientBackground {
 }
 
 class App {
-  constructor(container) {
+  constructor(container, colorPalette = 1) {
     this.container = container;
+    this.colorPalette = colorPalette;
     const width = container.clientWidth || window.innerWidth;
     const height = container.clientHeight || window.innerHeight;
 
@@ -370,7 +418,7 @@ class App {
     this.clock = new THREE.Clock();
 
     this.touchTexture = new TouchTexture();
-    this.gradientBackground = new GradientBackground(this, width, height);
+    this.gradientBackground = new GradientBackground(this, width, height, colorPalette);
     this.gradientBackground.uniforms.uTouchTexture.value =
       this.touchTexture.texture;
 
@@ -446,6 +494,13 @@ class App {
     }
   }
 
+  updatePalette(colorPalette) {
+    if (this.gradientBackground) {
+      this.gradientBackground.updatePalette(colorPalette);
+      this.colorPalette = colorPalette;
+    }
+  }
+
   dispose() {
     this.stop();
     window.removeEventListener("resize", this._onResize);
@@ -460,14 +515,12 @@ class App {
 }
 
 // React 컴포넌트에서 호출할 초기화 함수
-export function createLiquidGradient(container) {
+export function createLiquidGradient(container, colorPalette = 1) {
   if (typeof window === "undefined" || !container) {
     return () => {};
   }
-  const app = new App(container);
-  return () => {
-    app.dispose();
-  };
+  const app = new App(container, colorPalette);
+  return app;
 }
 
 
