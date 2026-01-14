@@ -123,7 +123,7 @@ class TouchTexture {
     const offset = this.size * 5;
     this.ctx.shadowOffsetX = offset;
     this.ctx.shadowOffsetY = offset;
-    this.ctx.shadowBlur = radius * 0.5; // 블러 강도 줄여서 더 또렷하게
+    this.ctx.shadowBlur = radius * 0.25; // 블러 강도 더 줄여서 더 선명하게
     this.ctx.shadowColor = `rgba(${color},${0.2 * intensity})`;
 
     this.ctx.beginPath();
@@ -154,11 +154,11 @@ class GradientBackground {
       uSpeed: { value: 0.25 }, // 더욱 느리고 묵직하게
       uIntensity: { value: 1.1 }, // 전체 대비 낮춤
       uTouchTexture: { value: null },
-      uGrainIntensity: { value: 0.06 }, // 노이즈 강도 줄여서 더 또렷하게
+      uGrainIntensity: { value: 0.03 }, // 노이즈 강도 더 줄여서 더 선명하게
       uZoom: { value: 1.0 },
       uDarkNavy: { value: new THREE.Vector3(...palette.uDarkNavy) },
       // 그라디언트 덩어리 크기 조절 (더 작게 해서 선명한 경계)
-      uGradientSize: { value: 0.55 },
+      uGradientSize: { value: 0.5 },
       uGradientCount: { value: 8.0 },
       uColor1Weight: { value: 0.5 },
       uColor2Weight: { value: 1.0 },
