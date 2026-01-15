@@ -21,7 +21,7 @@ function DescItem({ title, isVisible }) {
           "linear-gradient(180deg, #F0F0ED 21.39%, #DFCDE4 100%)",
       }}
     >
-      <div className="leading-none text-[6vw] md:text-[5vw] lg:text-[2.2vw] font-[500] tracking-[-0.03em] px-[2.1vh] lg:pl-[4.5vw] lg:pr-[1vw] text-left">
+      <div className="leading-none text-[32px] font-[500] tracking-[-0.03em] px-[2.1vh] lg:pl-[4.5vw] lg:pr-[1vw] text-left">
         {title}
       </div>
     </li>

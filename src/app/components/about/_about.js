@@ -5,8 +5,9 @@ import { useState, useEffect } from "react";
 
 // 상단 about 섹션의 좌측 제목 + 우측 텍스트를 보여주는 컴포넌트입니다.
 // 어떤 섹션을 보여줄지는 activeId / onChange 로 제어합니다.
+// aboutStyle: 1 = 원래 방식 (활성 제목만), 2 = 평범한 목록 형식 (모든 제목)
 
-export default function AboutIntro({ activeId, onChange }) {
+export default function AboutIntro({ activeId, onChange, aboutStyle = 2 }) {
   // 우측 컨텐츠의 페이드 전환을 위한 상태 관리
   const [displayId, setDisplayId] = useState(activeId);
   const [isFade, setIsFade] = useState(true);
@@ -41,29 +42,53 @@ export default function AboutIntro({ activeId, onChange }) {
   return (
     <div className="w-full relative z-10 px-0">
       <div className="flex flex-col lg:flex-row items-start">
-        {/* 좌측: 제목 (모션 제거, 즉시 변경) */}
+        {/* 좌측: 제목 영역 */}
         <div className="w-full lg:w-[28%] px-[2.1vh] lg:pl-[4.5vw] lg:pr-[1vw]">
-          <h2 className="text-left font-[500] leading-tight text-[6vw] md:text-[5vw] lg:text-[2.2vw] tracking-[-0.03em]">
-            {titleSection.title}
-          </h2>
+          {aboutStyle === 1 ? (
+            // 스타일 1: 원래 방식 (활성 제목만 표시, 하단 박스 형식과 함께 사용)
+            <h2 className="text-left font-[500] leading-tight text-[32px] tracking-[-0.03em]">
+              {titleSection.title}
+            </h2>
+          ) : (
+            // 스타일 2: 평범한 목록 형식 (모든 제목 표시, 하단 박스 형식 없음)
+            <ul className="flex flex-col gap-2">
+              {ABOUT_SECTIONS.map((section) => {
+                const isActive = section.id === activeId;
+                return (
+                  <li
+                    key={section.id}
+                    className={`text-left leading-tight text-[32px] tracking-[-0.03em] ${
+                      isActive
+                        ? "font-[500] text-[#0f0f13]"
+                        : "font-[500] text-[#9D9C9C]"
+                    }`}
+                  >
+                    {section.title}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
 
         {/* 우측: 컨텐츠 (자연스러운 페이드 트랜지션) */}
         <div 
-          className={`w-full lg:w-[72%] px-[2.1vh] lg:pl-[6vw] lg:pr-[12vw] transition-opacity duration-300 ease-in-out ${
+          className={`w-full lg:w-[68%] px-[2.1vh] lg:pl-[6vw] lg:pr-[12vw] transition-opacity duration-300 ease-in-out ${
             isFade ? "opacity-100" : "opacity-0"
           }`}
         >
-          {safeParagraphs.map((paragraph, index) => (
-            <p
-              key={index}
-              className={`text-[3.2vw] md:text-[2.3vw] lg:text-[1.2vw] leading-[1.7] ${
-                index > 0 ? "mt-4" : ""
-              }`}
-            >
-              {paragraph}
-            </p>
-          ))}
+          <div className="max-w-[900px]">
+            {safeParagraphs.map((paragraph, index) => (
+              <p
+                key={index}
+                className={`text-[18px] leading-[1.7] ${
+                  index > 0 ? "mt-4" : ""
+                }`}
+              >
+                {paragraph}
+              </p>
+            ))}
+          </div>
 
           {/* 이미지 영역 (우측 하단) */}
           <div className={`flex flex-col md:flex-row gap-4 overflow-hidden lg:pb-[5vh] w-full ${displayId === "who" ? "mt-8" : "mt-24"}`}>

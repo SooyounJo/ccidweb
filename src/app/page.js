@@ -25,6 +25,7 @@ export default function Home() {
   const [activeAboutId, setActiveAboutId] = useState("who"); // about 내부 단계
   const [isAboutLocked, setIsAboutLocked] = useState(false); // about 화면 고정 여부
   const [colorPalette, setColorPalette] = useState(1); // 색상 팔레트 상태
+  const [aboutStyle, setAboutStyle] = useState(2); // about 스타일 (1: 원래 방식, 2: 평범한 목록 형식)
   const mainRef = useRef(null);
   const currentSectionRef = useRef("cover");
   const lastStepTimeRef = useRef(0);
@@ -232,6 +233,26 @@ export default function Home() {
         </div>
       )}
 
+      {/* About 스타일 선택 버튼 (우측 상단) */}
+      {sectionOn === "about" && (
+        <div className="fixed top-6 right-6 lg:top-8 lg:right-10 z-[600] flex gap-3">
+          {[1, 2].map((num) => (
+            <button
+              key={num}
+              onClick={() => setAboutStyle(num)}
+              className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full border-2 transition-all duration-300 flex items-center justify-center font-semibold text-base lg:text-lg backdrop-blur-sm ${
+                aboutStyle === num
+                  ? "bg-[#0f0f13]/30 border-[#0f0f13] text-[#0f0f13] shadow-lg scale-110"
+                  : "bg-[#0f0f13]/10 border-[#0f0f13]/40 text-[#0f0f13] hover:bg-[#0f0f13]/20 hover:border-[#0f0f13]/60 hover:scale-105"
+              }`}
+              aria-label={`About style ${num}`}
+            >
+              {num}
+            </button>
+          ))}
+        </div>
+      )}
+
       <main
         ref={mainRef}
         style={{
@@ -283,13 +304,16 @@ export default function Home() {
 
           {/* 컨텐츠 영역: 모든 단계에서 동일한 상단 기준 위치에 고정 (더 위로 이동) */}
           <div className="relative z-10 w-full h-full flex flex-col justify-start pt-[15vh]">
-            <AboutIntro activeId={activeAboutId} onChange={setActiveAboutId} />
+            <AboutIntro activeId={activeAboutId} onChange={setActiveAboutId} aboutStyle={aboutStyle} />
           </div>
 
           {/* 하단 항목: 절대 위치로 배치하여 위 컨텐츠의 레이아웃에 영향을 주지 않음 */}
-          <div className="absolute bottom-0 left-0 w-full z-10">
-            <Desc activeId={activeAboutId} />
-          </div>
+          {/* 스타일 1일 때만 하단 박스 형식 표시 */}
+          {aboutStyle === 1 && (
+            <div className="absolute bottom-0 left-0 w-full z-10">
+              <Desc activeId={activeAboutId} />
+            </div>
+          )}
         </section>
         <section
           id="works"
