@@ -94,14 +94,14 @@ export default function AboutIntro({ activeId, onChange, aboutStyle = 2 }) {
           <div className={`flex flex-col md:flex-row gap-4 overflow-hidden lg:pb-[5vh] w-full ${displayId === "who" ? "mt-8" : "mt-24"}`}>
             {displayId === "who" ? (
               <>
-                <div className="w-[45%] md:w-[40%] aspect-[16/10] lg:aspect-[3.5/2.5] relative rounded-md overflow-hidden shadow-sm">
+                <div className="w-[45%] md:w-[40%] aspect-[16/10] lg:aspect-[3.5/2.5] relative overflow-hidden shadow-sm">
                   <img 
                     src="/img/about_1.png" 
                     alt="About 1" 
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <div className="w-[45%] md:w-[40%] aspect-[16/10] lg:aspect-[3.5/2.5] relative rounded-md overflow-hidden shadow-sm">
+                <div className="w-[45%] md:w-[40%] aspect-[16/10] lg:aspect-[3.5/2.5] relative overflow-hidden shadow-sm">
                   <img 
                     src="/img/about_2.png" 
                     alt="About 2" 
@@ -110,20 +110,29 @@ export default function AboutIntro({ activeId, onChange, aboutStyle = 2 }) {
                 </div>
               </>
             ) : displayId === "sectors" ? (
-              <div className="w-full md:w-[75%] aspect-[16/8] lg:aspect-[2.5/1] relative rounded-md overflow-hidden shadow-sm">
+              <div className="w-[60%] md:w-[55%] relative overflow-hidden shadow-sm">
                 <img 
                   src="/img/about_3.png" 
                   alt="About 3" 
-                  className="object-cover w-full h-full"
+                  className="w-full h-auto object-contain"
                 />
               </div>
             ) : (
-              <div className="w-full md:w-[75%] aspect-[16/8] lg:aspect-[2.5/1] relative rounded-md overflow-hidden shadow-sm">
-                <img 
-                  src="/img/about_4.png" 
-                  alt="About 4" 
-                  className="object-cover w-full h-full"
-                />
+              <div className="flex flex-col gap-4">
+                <div className="w-[60%] md:w-[55%] relative overflow-hidden shadow-sm">
+                  <img 
+                    src="/img/about_4.png" 
+                    alt="About 4" 
+                    className="w-full h-auto object-contain"
+                  />
+                </div>
+                <div className="w-[60%] md:w-[55%] relative overflow-hidden shadow-sm">
+                  <img 
+                    src="/img/about_5.png" 
+                    alt="About 5" 
+                    className="w-full h-auto object-contain"
+                  />
+                </div>
               </div>
             )}
           </div>
