@@ -246,20 +246,11 @@ export default function Home() {
           data-section="about"
           className="relative w-[100%] h-[100dvh] snap-start overflow-hidden"
         >
-          {/* 좌측 배경 판 (전체 높이) */}
+          {/* 전체 배경 그라데이션 (좌측 그라데이션을 전체로 확장) */}
           <div
-            className="hidden lg:block absolute left-0 top-0 bottom-0 z-0"
+            className="hidden lg:block absolute left-0 top-0 bottom-0 right-0 z-0"
             style={{
-              width: "28%",
               background: "linear-gradient(180deg, #F0F0ED 54.58%, #DBCDED 100%)",
-            }}
-          />
-          {/* 우측 배경 판 (전체 높이) */}
-          <div
-            className="hidden lg:block absolute right-0 top-0 bottom-0 z-0"
-            style={{
-              width: "72%",
-              background: "linear-gradient(180deg, #F0F0ED 20.43%, #DFCDE4 100%)",
             }}
           />
 

@@ -39,6 +39,11 @@ export default function AboutIntro({ activeId, onChange, aboutStyle = 2 }) {
     ? contentSection.paragraphs
     : [];
 
+  const paragraphs2 = [
+    safeParagraphs[0] || "",
+    safeParagraphs[1] || "",
+  ].filter(Boolean);
+
   return (
     <div className="w-full relative z-10 px-0">
       <div className="flex flex-col lg:flex-row items-start">
@@ -73,64 +78,67 @@ export default function AboutIntro({ activeId, onChange, aboutStyle = 2 }) {
 
         {/* 우측: 컨텐츠 (자연스러운 페이드 트랜지션) */}
         <div 
-          className={`w-full lg:w-[68%] px-[2.1vh] lg:pl-[6vw] lg:pr-[12vw] transition-opacity duration-300 ease-in-out ${
+          className={`w-full lg:w-[72%] px-[2.1vh] lg:pl-[4.5vw] lg:pr-[4.5vw] transition-opacity duration-300 ease-in-out ${
             isFade ? "opacity-100" : "opacity-0"
           }`}
         >
-          <div className="max-w-[900px]">
-            {safeParagraphs.map((paragraph, index) => (
-              <p
-                key={index}
-                className={`text-[18px] leading-[1.7] ${
-                  index > 0 ? "mt-4" : ""
-                }`}
-              >
+          {/* 텍스트: 2컬럼 그리드 */}
+          <div className="max-w-[1100px] grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+            {paragraphs2.map((paragraph, index) => (
+              <p key={index} className="text-[18px] leading-[1.35]">
                 {paragraph}
               </p>
             ))}
           </div>
 
           {/* 이미지 영역 (우측 하단) */}
-          <div className={`flex flex-col md:flex-row gap-4 overflow-hidden lg:pb-[5vh] w-full ${displayId === "who" ? "mt-8" : "mt-24"}`}>
+          <div className={`w-full lg:pb-[5vh] ${displayId === "who" ? "mt-12" : "mt-16"}`}>
             {displayId === "who" ? (
-              <>
-                <div className="w-[45%] md:w-[40%] aspect-[16/10] lg:aspect-[3.5/2.5] relative overflow-hidden shadow-sm">
-                  <img 
-                    src="/img/about_1.png" 
-                    alt="About 1" 
+              <div className="max-w-[1100px] grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="w-full aspect-[16/10] relative overflow-hidden">
+                  <img
+                    src="/img/about_1.png"
+                    alt="About 1"
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <div className="w-[45%] md:w-[40%] aspect-[16/10] lg:aspect-[3.5/2.5] relative overflow-hidden shadow-sm">
-                  <img 
-                    src="/img/about_2.png" 
-                    alt="About 2" 
+                <div className="w-full aspect-[16/10] relative overflow-hidden">
+                  <img
+                    src="/img/about_2.png"
+                    alt="About 2"
                     className="object-cover w-full h-full"
                   />
                 </div>
-              </>
+              </div>
             ) : displayId === "sectors" ? (
-              <div className="w-[60%] md:w-[55%] relative overflow-hidden shadow-sm">
-                <img 
-                  src="/img/about_3.png" 
-                  alt="About 3" 
-                  className="w-full h-auto object-contain"
-                />
+              <div className="max-w-[1100px] grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* 첫번째 단락(좌측 컬럼) 그리드에만 이미지 배치 */}
+                <div className="w-full relative overflow-hidden">
+                  <img
+                    src="/img/about_3.png"
+                    alt="About 3"
+                    className="w-full h-auto object-contain"
+                  />
+                </div>
+                {/* 두번째 컬럼은 비워두어 정렬만 맞춤 */}
+                <div className="hidden md:block" />
               </div>
             ) : (
-              <div className="flex flex-col gap-4">
-                <div className="w-[60%] md:w-[55%] relative overflow-hidden shadow-sm">
-                  <img 
-                    src="/img/about_4.png" 
-                    alt="About 4" 
-                    className="w-full h-auto object-contain"
+              <div className="max-w-[1100px] grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* 첫번째 단락(좌측 컬럼) 아래 */}
+                <div className="w-full aspect-[52/25] relative overflow-hidden">
+                  <img
+                    src="/img/about_4.png"
+                    alt="About 4"
+                    className="w-full h-full object-cover object-center"
                   />
                 </div>
-                <div className="w-[60%] md:w-[55%] relative overflow-hidden shadow-sm">
-                  <img 
-                    src="/img/about_5.png" 
-                    alt="About 5" 
-                    className="w-full h-auto object-contain"
+                {/* 두번째 단락(우측 컬럼) 아래 */}
+                <div className="w-full aspect-[52/25] relative overflow-hidden">
+                  <img
+                    src="/img/about_5.png"
+                    alt="About 5"
+                    className="w-full h-full object-cover object-center"
                   />
                 </div>
               </div>
