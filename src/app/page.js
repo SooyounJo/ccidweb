@@ -24,8 +24,8 @@ export default function Home() {
   const [sectionOn, setSectionOn] = useState("cover");
   const [activeAboutId, setActiveAboutId] = useState("who"); // about 내부 단계
   const [isAboutLocked, setIsAboutLocked] = useState(false); // about 화면 고정 여부
-  const [colorPalette, setColorPalette] = useState(1); // 색상 팔레트 상태
-  const [aboutStyle, setAboutStyle] = useState(2); // about 스타일 (1: 원래 방식, 2: 평범한 목록 형식)
+  const [colorPalette] = useState(2); // 색상 팔레트 상태 (2번으로 고정)
+  const [aboutStyle] = useState(2); // about 스타일 (2번으로 고정)
   const mainRef = useRef(null);
   const currentSectionRef = useRef("cover");
   const lastStepTimeRef = useRef(0);
@@ -213,45 +213,6 @@ export default function Home() {
         <LiquidBackground colorPalette={colorPalette} />
       </div>
 
-      {/* 색상 팔레트 선택 버튼 (우측 상단) */}
-      {sectionOn === "cover" && (
-        <div className="fixed top-6 right-6 lg:top-8 lg:right-10 z-[600] flex gap-3">
-          {[1, 2, 3].map((num) => (
-            <button
-              key={num}
-              onClick={() => setColorPalette(num)}
-              className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full border-2 transition-all duration-300 flex items-center justify-center text-white font-semibold text-base lg:text-lg backdrop-blur-sm ${
-                colorPalette === num
-                  ? "bg-white/30 border-white shadow-lg scale-110"
-                  : "bg-white/10 border-white/40 hover:bg-white/20 hover:border-white/60 hover:scale-105"
-              }`}
-              aria-label={`Color palette ${num}`}
-            >
-              {num}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* About 스타일 선택 버튼 (우측 상단) */}
-      {sectionOn === "about" && (
-        <div className="fixed top-6 right-6 lg:top-8 lg:right-10 z-[600] flex gap-3">
-          {[1, 2].map((num) => (
-            <button
-              key={num}
-              onClick={() => setAboutStyle(num)}
-              className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full border-2 transition-all duration-300 flex items-center justify-center font-semibold text-base lg:text-lg backdrop-blur-sm ${
-                aboutStyle === num
-                  ? "bg-[#0f0f13]/30 border-[#0f0f13] text-[#0f0f13] shadow-lg scale-110"
-                  : "bg-[#0f0f13]/10 border-[#0f0f13]/40 text-[#0f0f13] hover:bg-[#0f0f13]/20 hover:border-[#0f0f13]/60 hover:scale-105"
-              }`}
-              aria-label={`About style ${num}`}
-            >
-              {num}
-            </button>
-          ))}
-        </div>
-      )}
 
       <main
         ref={mainRef}
@@ -269,14 +230,14 @@ export default function Home() {
         >
           <Cover textColor={textColor} />
           {/* 어바웃 섹션으로의 자연스러운 배경 전환을 위한 그라데이션 레이어 */}
-          <div className="absolute bottom-0 left-0 w-full h-[20vh] pointer-events-none z-0 flex">
+          <div className="absolute bottom-0 left-0 w-full h-[8vh] pointer-events-none z-0 flex">
             <div 
               className="w-[44.27%] h-full" 
-              style={{ background: "linear-gradient(to top, #F0F0ED 0%, rgba(240, 240, 237, 0.6) 25%, rgba(240, 240, 237, 0.2) 60%, transparent 100%)" }} 
+              style={{ background: "linear-gradient(to top, rgba(240, 240, 237, 0.9) 0%, rgba(240, 240, 237, 0.5) 25%, rgba(240, 240, 237, 0.2) 50%, rgba(240, 240, 237, 0.05) 75%, transparent 100%)" }} 
             />
             <div 
               className="w-[55.73%] h-full" 
-              style={{ background: "linear-gradient(to top, #F0F0ED 0%, rgba(240, 240, 237, 0.6) 25%, rgba(240, 240, 237, 0.2) 60%, transparent 100%)" }} 
+              style={{ background: "linear-gradient(to top, rgba(240, 240, 237, 0.9) 0%, rgba(240, 240, 237, 0.5) 25%, rgba(240, 240, 237, 0.2) 50%, rgba(240, 240, 237, 0.05) 75%, transparent 100%)" }} 
             />
           </div>
         </section>
