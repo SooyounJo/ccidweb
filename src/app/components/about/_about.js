@@ -45,10 +45,10 @@ export default function AboutIntro({ activeId, onChange, aboutStyle = 2 }) {
   ].filter(Boolean);
 
   return (
-    <div className="w-full relative z-10 px-0">
-      <div className="flex flex-col lg:flex-row items-start">
+    <div className="w-full relative z-10 px-[2.1vh] lg:px-[4.5vw]">
+      <div className="flex flex-col lg:flex-row items-start lg:gap-[2vw]">
         {/* 좌측: 제목 영역 */}
-        <div className="w-full lg:w-[28%] px-[2.1vh] lg:pl-[4.5vw] lg:pr-[1vw]">
+        <div className="w-full lg:w-[28%]">
           {aboutStyle === 1 ? (
             // 스타일 1: 원래 방식 (활성 제목만 표시, 하단 박스 형식과 함께 사용)
             <h2 className="text-left font-[500] leading-tight text-[32px] tracking-[-0.03em]">
@@ -78,12 +78,12 @@ export default function AboutIntro({ activeId, onChange, aboutStyle = 2 }) {
 
         {/* 우측: 컨텐츠 (자연스러운 페이드 트랜지션) */}
         <div 
-          className={`w-full lg:w-[72%] px-[2.1vh] lg:pl-[4.5vw] lg:pr-[4.5vw] transition-opacity duration-300 ease-in-out ${
+          className={`w-full lg:w-[72%] transition-opacity duration-300 ease-in-out ${
             isFade ? "opacity-100" : "opacity-0"
           }`}
         >
           {/* 텍스트: 2컬럼 그리드 */}
-          <div className="max-w-[1100px] grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
             {paragraphs2.map((paragraph, index) => (
               <p key={index} className="text-[18px] leading-[1.35]">
                 {paragraph}
@@ -94,7 +94,7 @@ export default function AboutIntro({ activeId, onChange, aboutStyle = 2 }) {
           {/* 이미지 영역 (우측 하단) */}
           <div className={`w-full lg:pb-[5vh] ${displayId === "who" ? "mt-12" : "mt-16"}`}>
             {displayId === "who" ? (
-              <div className="max-w-[1100px] grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="w-full aspect-[16/10] relative overflow-hidden">
                   <img
                     src="/img/about_1.png"
@@ -111,7 +111,7 @@ export default function AboutIntro({ activeId, onChange, aboutStyle = 2 }) {
                 </div>
               </div>
             ) : displayId === "sectors" ? (
-              <div className="max-w-[1100px] grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* 첫번째 단락(좌측 컬럼) 그리드에만 이미지 배치 */}
                 <div className="w-full relative overflow-hidden">
                   <img
@@ -124,7 +124,7 @@ export default function AboutIntro({ activeId, onChange, aboutStyle = 2 }) {
                 <div className="hidden md:block" />
               </div>
             ) : (
-              <div className="max-w-[1100px] grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* 첫번째 단락(좌측 컬럼) 아래 */}
                 <div className="w-full aspect-[52/25] relative overflow-hidden">
                   <img

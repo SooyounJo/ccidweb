@@ -250,7 +250,7 @@ export default function Home() {
           <div
             className="hidden lg:block absolute left-0 top-0 bottom-0 right-0 z-0"
             style={{
-              background: "linear-gradient(180deg, #F0F0ED 54.58%, #DBCDED 100%)",
+              background: "linear-gradient(180deg, #F0F0ED 54.58%, #E0E0FF 100%)",
             }}
           />
 

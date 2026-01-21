@@ -1,13 +1,16 @@
 :root {
+  /* 배경 톤은 기존(밝은)으로 복귀 */
   --color-bg1: rgb(230, 213, 218);
   --color-bg2: rgb(138, 220, 200);
-  --color1: 18, 113, 255;
-  --color2: 221, 74, 255;
-  --color3: 100, 220, 255;
-  --color4: 200, 50, 50;
-  --color5: 144, 255, 75;
-  --color-interactive: 140, 100, 255;
-  --circle-size: 80%;
+
+  /* 메인 그래픽(팔레트2)의 조화: 하늘색 + 보라 + 연두 + 노랑 */
+  --color1: 100, 220, 255;         /* sky */
+  --color2: 221, 74, 255;          /* purple */
+  --color5: 144, 255, 75;          /* lime */
+  --color-interactive: 255, 235, 140; /* yellow */
+
+  /* 원형(블랍) 크기 확대 */
+  --circle-size: 115%;
   --blending: hard-light;
 }
 
@@ -61,7 +64,7 @@
 
   .gradients-container {
     transform: translate3d(0, 0, 0);
-    filter: url(#goo) blur(20px);
+    filter: url(#goo) blur(30px);
     width: 100%;
     height: 100%;
   }
@@ -82,7 +85,7 @@
     left: calc(50% - var(--circle-size) / 2);
 
     transform-origin: center center;
-    animation: moveVertical 30s ease infinite;
+    animation: moveVertical 42s ease-in-out infinite;
 
     opacity: 1;
   }
@@ -102,8 +105,8 @@
     top: calc(50% - var(--circle-size) / 2);
     left: calc(50% - var(--circle-size) / 2);
 
-    transform-origin: calc(50% - 400px);
-    animation: moveInCircle 20s reverse infinite;
+    transform-origin: calc(50% - 480px);
+    animation: moveInCircle 36s ease-in-out reverse infinite;
 
     opacity: 1;
   }
@@ -118,13 +121,13 @@
       no-repeat;
     mix-blend-mode: var(--blending);
 
-    width: calc(var(--circle-size) * 2);
-    height: calc(var(--circle-size) * 2);
+    width: calc(var(--circle-size) * 2.2);
+    height: calc(var(--circle-size) * 2.2);
     top: calc(50% - var(--circle-size));
     left: calc(50% - var(--circle-size));
 
-    transform-origin: calc(50% - 800px) calc(50% + 200px);
-    animation: moveInCircle 20s ease infinite;
+    transform-origin: calc(50% - 900px) calc(50% + 220px);
+    animation: moveInCircle 48s ease-in-out infinite;
 
     opacity: 1;
   }
@@ -144,6 +147,6 @@
     top: -50%;
     left: -50%;
 
-    opacity: 0.7;
+    opacity: 0.75;
   }
 }

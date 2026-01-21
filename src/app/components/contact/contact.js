@@ -14,8 +14,9 @@ export default function Contact({ borderRadius, sectionOn }) {
     let tgY = 0;
 
     function move() {
-      curX += (tgX - curX) / 10;
-      curY += (tgY - curY) / 10;
+      // 메인 페이지 리퀴드처럼 더 느긋하게 따라오도록 완화
+      curX += (tgX - curX) / 20;
+      curY += (tgY - curY) / 20;
       interBubble.style.transform = `translate(${Math.round(
         curX
       )}px, ${Math.round(curY)}px)`;
@@ -61,10 +62,10 @@ export default function Contact({ borderRadius, sectionOn }) {
         <div className="interactive"></div>
       </div>
 
-      {/* purple tone layer */}
+      {/* tone layer (보라 편향 줄이고, 다색 블랍이 잘 보이도록) */}
       <div
-        className="bg-[rgba(164,106,251,0.3)] absolute top-0 left-0 w-full h-full"
-        style={{ mixBlendMode: "darker" }}
+        className="bg-[rgba(255,255,255,0.06)] absolute top-0 left-0 w-full h-full"
+        style={{ mixBlendMode: "soft-light" }}
       ></div>
 
       {/* gradient layer */}
