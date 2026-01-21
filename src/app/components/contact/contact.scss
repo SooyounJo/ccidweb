@@ -6,7 +6,7 @@
   /* 메인 그래픽(팔레트2)의 조화: 하늘색 + 보라 + 연두 + 노랑 */
   --color1: 100, 220, 255;         /* sky */
   --color2: 221, 74, 255;          /* purple */
-  --color5: 144, 255, 75;          /* lime */
+  --color5: 180, 240, 160;          /* 연두색을 더 은은하게 */
   --color-interactive: 255, 235, 140; /* yellow */
 
   /* 원형(블랍) 크기 확대 */
@@ -115,7 +115,7 @@
     position: absolute;
     background: radial-gradient(
         circle at center,
-        rgba(var(--color5), 0.8) 0,
+        rgba(var(--color5), 0.5) 0,
         rgba(var(--color5), 0) 50%
       )
       no-repeat;
